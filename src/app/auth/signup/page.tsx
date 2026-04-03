@@ -29,7 +29,7 @@ export default function SignupPage() {
               required
               autoComplete="email"
               className="w-full rounded-lg border border-[var(--color-muted)]/30 bg-transparent px-3 py-3 text-base min-h-[44px] outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
-              placeholder="you@example.com"
+              placeholder="이메일 주소를 입력하세요"
             />
           </div>
           <div>
@@ -47,7 +47,7 @@ export default function SignupPage() {
               minLength={6}
               autoComplete="new-password"
               className="w-full rounded-lg border border-[var(--color-muted)]/30 bg-transparent px-3 py-3 text-base min-h-[44px] outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
-              placeholder="6자 이상"
+              placeholder="비밀번호를 입력하세요"
             />
           </div>
 

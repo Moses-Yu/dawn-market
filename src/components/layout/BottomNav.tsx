@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Home, FileText, Bell, Settings } from "lucide-react";
 
 const navItems = [
-  { href: "/", label: "홈", icon: "🏠" },
-  { href: "/briefing", label: "브리핑", icon: "📋" },
-  { href: "/alerts", label: "알림", icon: "🔔" },
-  { href: "/settings", label: "설정", icon: "⚙️" },
+  { href: "/", label: "홈", icon: Home },
+  { href: "/briefing", label: "브리핑", icon: FileText },
+  { href: "/alerts", label: "알림", icon: Bell },
+  { href: "/settings", label: "설정", icon: Settings },
 ];
 
 export default function BottomNav() {
@@ -22,13 +23,19 @@ export default function BottomNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center gap-0.5 px-3 py-1 text-xs transition-colors ${
+              className={`group flex flex-col items-center gap-0.5 px-3 py-1 text-xs transition-colors ${
                 isActive
                   ? "text-[var(--color-primary)]"
                   : "text-[var(--color-muted)] hover:text-[var(--color-foreground)]"
               }`}
             >
-              <span className="text-xl">{item.icon}</span>
+              <item.icon
+                className={`h-5 w-5 ${
+                  isActive
+                    ? "text-[var(--color-primary)]"
+                    : "text-[var(--color-muted)] group-hover:text-[var(--color-foreground)]"
+                }`}
+              />
               <span>{item.label}</span>
             </Link>
           );

@@ -34,7 +34,7 @@ export default async function Home() {
           >
             <div className="mb-2 flex items-center justify-between">
               <span className="text-xs text-[var(--color-muted)]">
-                🌅 {formatDate(briefing.date)} 브리핑
+                {formatDate(briefing.date)} 브리핑
               </span>
               <span className="text-xs text-[var(--color-primary)]">
                 자세히 보기 →
@@ -48,7 +48,10 @@ export default async function Home() {
           {/* Top stories preview (first 3) */}
           {briefing.topStories.length > 0 && (
             <section>
-              <h3 className="mb-3 text-base font-bold">📰 주요 뉴스</h3>
+              <h3 className="flex items-center gap-2 mb-3 text-base font-bold">
+                <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
+                주요 뉴스
+              </h3>
               <div className="space-y-2">
                 {briefing.topStories.slice(0, 3).map((story, i) => (
                   <Link
@@ -59,7 +62,7 @@ export default async function Home() {
                     <div className="mb-1.5 flex items-center gap-1.5">
                       <SeverityBadge severity={story.severity} />
                     </div>
-                    <div className="text-sm font-semibold leading-snug">
+                    <div className="text-sm font-semibold leading-normal">
                       {story.title}
                     </div>
                   </Link>
@@ -79,7 +82,10 @@ export default async function Home() {
           {/* Market indices */}
           {briefing.marketOverview.keyIndices.length > 0 && (
             <section>
-              <h3 className="mb-3 text-base font-bold">📊 주요 지수</h3>
+              <h3 className="flex items-center gap-2 mb-3 text-base font-bold">
+                <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
+                주요 지수
+              </h3>
               <div className="grid grid-cols-2 gap-2">
                 {briefing.marketOverview.keyIndices.map((idx) => {
                   const isPositive = idx.change >= 0;

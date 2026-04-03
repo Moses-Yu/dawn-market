@@ -42,16 +42,24 @@ export default function LoginPage() {
                 required
                 autoComplete="email"
                 className="w-full rounded-lg border border-[var(--color-muted)]/30 bg-transparent px-3 py-3 text-base min-h-[44px] outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
-                placeholder="you@example.com"
+                placeholder="이메일 주소를 입력하세요"
               />
             </div>
             <div>
-              <label
-                htmlFor="password"
-                className="mb-1 block text-sm font-medium"
-              >
-                비밀번호
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-medium"
+                >
+                  비밀번호
+                </label>
+                <Link
+                  href="/auth/reset-password"
+                  className="text-xs text-[var(--color-muted)] hover:text-[var(--color-primary)]"
+                >
+                  비밀번호를 잊으셨나요?
+                </Link>
+              </div>
               <input
                 id="password"
                 name="password"
@@ -59,7 +67,7 @@ export default function LoginPage() {
                 required
                 autoComplete="current-password"
                 className="w-full rounded-lg border border-[var(--color-muted)]/30 bg-transparent px-3 py-3 text-base min-h-[44px] outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
-                placeholder="••••••••"
+                placeholder="비밀번호를 입력하세요"
               />
             </div>
 
@@ -93,7 +101,7 @@ export default function LoginPage() {
                 required
                 autoComplete="email"
                 className="w-full rounded-lg border border-[var(--color-muted)]/30 bg-transparent px-3 py-3 text-base min-h-[44px] outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
-                placeholder="you@example.com"
+                placeholder="이메일 주소를 입력하세요"
               />
             </div>
 

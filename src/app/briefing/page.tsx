@@ -62,7 +62,7 @@ function StoryCard({ story }: { story: BriefingStory }) {
         <CategoryBadge category={story.category} />
         <SentimentBadge sentiment={story.sentiment} />
       </div>
-      <h3 className="mb-2 text-base font-bold leading-snug">{story.title}</h3>
+      <h3 className="mb-2 text-base font-bold leading-normal">{story.title}</h3>
       <p className="text-sm leading-relaxed text-[var(--color-muted)]">
         {story.summary}
       </p>
@@ -122,11 +122,16 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <div className="mb-1 text-xs text-[var(--color-muted)]">
-          🌅 아침 시장 브리핑
-        </div>
-        <h2 className="text-xl font-bold">{formatDate(briefing.date)}</h2>
+      <div className="mb-6">
+        <p className="text-xs text-[var(--color-muted)]">
+          {new Date(briefing.date + "T00:00:00").toLocaleDateString("ko-KR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            weekday: "long",
+          })}
+        </p>
+        <h1 className="mt-0.5 text-2xl font-bold">오늘의 시장 브리핑</h1>
         <div className="mt-1 text-xs text-[var(--color-muted)]">
           생성:{" "}
           {new Date(briefing.generatedAt).toLocaleTimeString("ko-KR", {
@@ -141,7 +146,10 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
 
       {/* Market Overview */}
       <section>
-        <h3 className="mb-3 text-base font-bold">📊 시장 개요</h3>
+        <h3 className="flex items-center gap-2 mb-3 text-base font-bold">
+          <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
+          시장 개요
+        </h3>
         <p className="mb-4 text-sm leading-relaxed text-[var(--color-muted)]">
           {briefing.marketOverview.summary}
         </p>
@@ -164,7 +172,10 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
       {/* Top Stories */}
       {briefing.topStories.length > 0 && (
         <section>
-          <h3 className="mb-3 text-base font-bold">📰 주요 뉴스</h3>
+          <h3 className="flex items-center gap-2 mb-3 text-base font-bold">
+            <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
+            주요 뉴스
+          </h3>
           <div className="space-y-3">
             {briefing.topStories.map((story, i) => (
               <StoryCard key={i} story={story} />
@@ -176,7 +187,10 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
       {/* Sector Analysis */}
       {briefing.sectorAnalysis.length > 0 && (
         <section>
-          <h3 className="mb-3 text-base font-bold">🔬 섹터 분석</h3>
+          <h3 className="flex items-center gap-2 mb-3 text-base font-bold">
+            <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
+            섹터 분석
+          </h3>
           <div className="space-y-2">
             {briefing.sectorAnalysis.map((sa, i) => (
               <SectorCard
@@ -193,7 +207,10 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
       {/* Action Items */}
       {briefing.actionItems.length > 0 && (
         <section>
-          <h3 className="mb-3 text-base font-bold">✅ 오늘의 체크포인트</h3>
+          <h3 className="flex items-center gap-2 mb-3 text-base font-bold">
+            <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
+            오늘의 체크포인트
+          </h3>
           <div className="rounded-xl border border-white/10 bg-white/5 p-4">
             <ul className="space-y-2">
               {briefing.actionItems.map((item, i) => (
@@ -212,7 +229,7 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
 
       {/* Disclaimer */}
       <div className="rounded-lg border border-white/5 bg-white/[0.02] p-3 text-xs leading-relaxed text-[var(--color-muted)]">
-        ⚠️ 본 브리핑은 AI가 자동 생성한 정보로, 투자 조언이 아닙니다. 투자
+        본 브리핑은 AI가 자동 생성한 정보로, 투자 조언이 아닙니다. 투자
         결정은 본인의 판단과 책임 하에 이루어져야 합니다.
       </div>
 
@@ -222,7 +239,7 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
           href="/briefing/archive"
           className="text-sm text-[var(--color-primary)] hover:underline"
         >
-          📁 지난 브리핑 보기
+          지난 브리핑 보기
         </Link>
       </div>
     </div>
