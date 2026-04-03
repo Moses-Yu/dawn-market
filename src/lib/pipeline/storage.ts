@@ -112,6 +112,58 @@ export async function storeBriefing(
   return data.id;
 }
 
+export interface BriefingListItem {
+  id: string;
+  date: string;
+  generatedAt: string;
+  storyCount: number;
+}
+
+export async function getBriefingsList(
+  limit: number = 30
+): Promise<BriefingListItem[]> {
+  const supabase = getServiceClient();
+
+  const { data, error } = await supabase
+    .from("morning_briefings")
+    .select("id, date, generated_at, top_stories")
+    .order("date", { ascending: false })
+    .limit(limit);
+
+  if (error) throw new Error(`getBriefingsList: ${error.message}`);
+
+  return (data || []).map((row) => ({
+    id: row.id,
+    date: row.date,
+    generatedAt: row.generated_at,
+    storyCount: Array.isArray(row.top_stories) ? row.top_stories.length : 0,
+  }));
+}
+
+export async function getBriefingByDate(
+  date: string
+): Promise<MorningBriefing | null> {
+  const supabase = getServiceClient();
+
+  const { data, error } = await supabase
+    .from("morning_briefings")
+    .select("*")
+    .eq("date", date)
+    .limit(1)
+    .single();
+
+  if (error || !data) return null;
+
+  return {
+    date: data.date,
+    generatedAt: data.generated_at,
+    marketOverview: data.market_overview,
+    topStories: data.top_stories,
+    sectorAnalysis: data.sector_analysis,
+    actionItems: data.action_items,
+  };
+}
+
 export async function getLatestBriefing(): Promise<MorningBriefing | null> {
   const supabase = getServiceClient();
 

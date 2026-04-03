@@ -1,4 +1,21 @@
-export default function Home() {
+import Link from "next/link";
+import { getLatestBriefing } from "@/lib/pipeline/storage";
+import SeverityBadge from "@/components/briefing/SeverityBadge";
+
+function formatDate(dateStr: string): string {
+  const d = new Date(dateStr + "T00:00:00");
+  const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
+  return `${d.getMonth() + 1}월 ${d.getDate()}일 (${weekdays[d.getDay()]})`;
+}
+
+export default async function Home() {
+  let briefing;
+  try {
+    briefing = await getLatestBriefing();
+  } catch {
+    briefing = null;
+  }
+
   return (
     <div className="space-y-6">
       <section>
@@ -8,11 +25,97 @@ export default function Home() {
         </p>
       </section>
 
-      <section className="rounded-xl border border-white/10 bg-white/5 p-4">
-        <p className="text-center text-sm text-[var(--color-muted)]">
-          브리핑 준비 중...
-        </p>
-      </section>
+      {briefing ? (
+        <>
+          {/* Market overview card */}
+          <Link
+            href={`/briefing?date=${briefing.date}`}
+            className="block rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10"
+          >
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-xs text-[var(--color-muted)]">
+                🌅 {formatDate(briefing.date)} 브리핑
+              </span>
+              <span className="text-xs text-[var(--color-primary)]">
+                자세히 보기 →
+              </span>
+            </div>
+            <p className="text-sm leading-relaxed">
+              {briefing.marketOverview.summary}
+            </p>
+          </Link>
+
+          {/* Top stories preview (first 3) */}
+          {briefing.topStories.length > 0 && (
+            <section>
+              <h3 className="mb-3 text-base font-bold">📰 주요 뉴스</h3>
+              <div className="space-y-2">
+                {briefing.topStories.slice(0, 3).map((story, i) => (
+                  <Link
+                    key={i}
+                    href={`/briefing?date=${briefing.date}`}
+                    className="block rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10"
+                  >
+                    <div className="mb-1.5 flex items-center gap-1.5">
+                      <SeverityBadge severity={story.severity} />
+                    </div>
+                    <div className="text-sm font-semibold leading-snug">
+                      {story.title}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              {briefing.topStories.length > 3 && (
+                <Link
+                  href={`/briefing?date=${briefing.date}`}
+                  className="mt-2 block text-center text-xs text-[var(--color-primary)] hover:underline"
+                >
+                  +{briefing.topStories.length - 3}건 더 보기
+                </Link>
+              )}
+            </section>
+          )}
+
+          {/* Market indices */}
+          {briefing.marketOverview.keyIndices.length > 0 && (
+            <section>
+              <h3 className="mb-3 text-base font-bold">📊 주요 지수</h3>
+              <div className="grid grid-cols-2 gap-2">
+                {briefing.marketOverview.keyIndices.map((idx) => {
+                  const isPositive = idx.change >= 0;
+                  return (
+                    <div
+                      key={idx.symbol}
+                      className="rounded-xl border border-white/10 bg-white/5 p-3"
+                    >
+                      <div className="text-xs text-[var(--color-muted)]">
+                        {idx.symbol}
+                      </div>
+                      <div className="text-sm font-semibold">{idx.name}</div>
+                      <div
+                        className={`mt-1 text-xs font-medium ${isPositive ? "text-red-400" : "text-blue-400"}`}
+                      >
+                        {isPositive ? "▲" : "▼"} {Math.abs(idx.changePercent).toFixed(2)}%
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+        </>
+      ) : (
+        <section className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div className="flex flex-col items-center py-6 text-center">
+            <div className="mb-3 text-3xl">🌅</div>
+            <p className="text-sm text-[var(--color-muted)]">
+              브리핑 준비 중...
+              <br />
+              AI가 해외 시장 뉴스를 분석하고 있습니다.
+            </p>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
