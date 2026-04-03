@@ -50,9 +50,12 @@ export async function subscribeToPush(): Promise<PushSubscription | null> {
     const registration = await registerServiceWorker();
     if (!registration) return null;
 
-    // Check for existing subscription
+    // Check for existing subscription — always sync to server in case DB record was lost
     const existing = await registration.pushManager.getSubscription();
-    if (existing) return existing;
+    if (existing) {
+      await saveSubscription(existing);
+      return existing;
+    }
 
     // Request permission
     const permission = await Notification.requestPermission();
