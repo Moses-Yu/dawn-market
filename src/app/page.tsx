@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
 import { getLatestBriefing } from "@/lib/pipeline/storage";

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { getLatestReportSet } from "@/lib/pipeline/reports";
 import type { ReportType, MarketPrediction, DataPoint } from "@/lib/pipeline/reports";
