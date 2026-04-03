@@ -43,7 +43,7 @@ export default async function ArchivePage() {
             <Link
               key={b.id}
               href={`/briefing?date=${b.date}`}
-              className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10"
+              className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
             >
               <div>
                 <div className="text-sm font-semibold">

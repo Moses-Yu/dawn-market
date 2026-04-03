@@ -40,7 +40,7 @@ function MarketIndexCard({
         })}
       </div>
       <div
-        className={`mt-0.5 text-xs font-medium ${isPositive ? "text-red-400" : "text-blue-400"}`}
+        className={`mt-0.5 text-xs font-medium ${isPositive ? "text-[var(--color-market-up)]" : "text-[var(--color-market-down)]"}`}
       >
         {isPositive ? "▲" : "▼"}{" "}
         {Math.abs(change).toLocaleString("en-US", {

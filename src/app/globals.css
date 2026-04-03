@@ -7,7 +7,9 @@
   --color-primary: #3b82f6;
   --color-danger: #ef4444;
   --color-success: #22c55e;
-  --color-muted: #6b7280;
+  --color-muted: #9ca3af;
+  --color-market-up: #f87171;
+  --color-market-down: #60a5fa;
   --bottom-nav-height: 4rem;
 }
 

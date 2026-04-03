@@ -30,7 +30,7 @@ export default async function Home() {
           {/* Market overview card */}
           <Link
             href={`/briefing?date=${briefing.date}`}
-            className="block rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10"
+            className="block rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
           >
             <div className="mb-2 flex items-center justify-between">
               <span className="text-xs text-[var(--color-muted)]">
@@ -54,7 +54,7 @@ export default async function Home() {
                   <Link
                     key={i}
                     href={`/briefing?date=${briefing.date}`}
-                    className="block rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10"
+                    className="block rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
                   >
                     <div className="mb-1.5 flex items-center gap-1.5">
                       <SeverityBadge severity={story.severity} />
@@ -93,7 +93,7 @@ export default async function Home() {
                       </div>
                       <div className="text-sm font-semibold">{idx.name}</div>
                       <div
-                        className={`mt-1 text-xs font-medium ${isPositive ? "text-red-400" : "text-blue-400"}`}
+                        className={`mt-1 text-xs font-medium ${isPositive ? "text-[var(--color-market-up)]" : "text-[var(--color-market-down)]"}`}
                       >
                         {isPositive ? "▲" : "▼"} {Math.abs(idx.changePercent).toFixed(2)}%
                       </div>
