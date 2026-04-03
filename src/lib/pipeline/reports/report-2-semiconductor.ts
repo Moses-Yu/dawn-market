@@ -2,6 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import type { Report, ReportInput, ReportContent } from "./types";
 import { SEMICONDUCTOR_SYMBOLS, REPORT_TITLES } from "./types";
 import { filterMarketData } from "./data-collector";
+import { parseLlmJson } from "./parse-json";
 
 const anthropic = new Anthropic();
 
@@ -118,14 +119,7 @@ ${usContext}`;
 
   const text =
     response.content[0].type === "text" ? response.content[0].text : "";
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) {
-    throw new Error(
-      "Report 2 (Semiconductor): Failed to parse JSON response"
-    );
-  }
-
-  const content: ReportContent = JSON.parse(jsonMatch[0]);
+  const content: ReportContent = parseLlmJson(text);
 
   return {
     reportNumber: 2,

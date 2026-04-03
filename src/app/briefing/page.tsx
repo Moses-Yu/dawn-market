@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   getLatestBriefing,
@@ -8,6 +9,49 @@ import SeverityBadge from "@/components/briefing/SeverityBadge";
 import SentimentBadge from "@/components/briefing/SentimentBadge";
 import CategoryBadge from "@/components/briefing/CategoryBadge";
 import ShareButton from "@/components/briefing/ShareButton";
+
+type Props = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export async function generateMetadata({
+  searchParams,
+}: Props): Promise<Metadata> {
+  const { date } = await searchParams;
+  let briefing: MorningBriefing | null = null;
+
+  if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    briefing = await getBriefingByDate(date);
+  } else {
+    briefing = await getLatestBriefing();
+  }
+
+  if (!briefing) {
+    return { title: "시장 브리핑" };
+  }
+
+  const d = new Date(briefing.date + "T00:00:00");
+  const dateLabel = `${d.getMonth() + 1}월 ${d.getDate()}일`;
+  const summary =
+    briefing.marketOverview.summary?.slice(0, 120) ||
+    "오늘의 해외 시장 브리핑을 확인하세요";
+
+  return {
+    title: `${dateLabel} 시장 브리핑`,
+    description: summary,
+    openGraph: {
+      title: `${dateLabel} 새벽시장 브리핑`,
+      description: summary,
+      type: "article",
+      publishedTime: briefing.generatedAt,
+    },
+    twitter: {
+      card: "summary",
+      title: `${dateLabel} 새벽시장 브리핑`,
+      description: summary,
+    },
+  };
+}
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr + "T00:00:00");
@@ -118,9 +162,44 @@ function EmptyState() {
   );
 }
 
+function BriefingJsonLd({ briefing }: { briefing: MorningBriefing }) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dawn-market.vercel.app";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: `${briefing.date} 새벽시장 브리핑`,
+    description: briefing.marketOverview.summary?.slice(0, 200),
+    datePublished: briefing.generatedAt,
+    dateModified: briefing.generatedAt,
+    author: {
+      "@type": "Organization",
+      name: "새벽시장 Dawn Market",
+      url: siteUrl,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "새벽시장 Dawn Market",
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${siteUrl}/briefing?date=${briefing.date}`,
+    },
+    inLanguage: "ko",
+    articleSection: "Market Briefing",
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  );
+}
+
 function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
   return (
     <div className="space-y-6">
+      <BriefingJsonLd briefing={briefing} />
       {/* Header */}
       <div className="mb-6">
         <p className="text-xs text-[var(--color-muted)]">
@@ -233,8 +312,15 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
         결정은 본인의 판단과 책임 하에 이루어져야 합니다.
       </div>
 
-      {/* Archive link */}
-      <div className="text-center">
+      {/* Links */}
+      <div className="flex items-center justify-center gap-4">
+        <Link
+          href="/briefing/reports"
+          className="text-sm text-[var(--color-primary)] hover:underline"
+        >
+          AI 심층 리포트
+        </Link>
+        <span className="text-white/20">|</span>
         <Link
           href="/briefing/archive"
           className="text-sm text-[var(--color-primary)] hover:underline"
@@ -246,11 +332,7 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
   );
 }
 
-export default async function BriefingPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
+export default async function BriefingPage({ searchParams }: Props) {
   const { date } = await searchParams;
 
   let briefing: MorningBriefing | null = null;

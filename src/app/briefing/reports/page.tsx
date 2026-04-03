@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   getLatestReportSet,
@@ -13,6 +14,17 @@ import type {
   ReportType,
 } from "@/lib/pipeline/reports";
 import ReportDateNav from "./ReportDateNav";
+
+export const metadata: Metadata = {
+  title: "AI 심층 리포트",
+  description:
+    "10개 섹터별 AI 심층 분석 리포트. 미국 시장, 반도체, 방산, AI 인프라, 2차전지, 환율, 기술적 분석까지.",
+  openGraph: {
+    title: "AI 심층 리포트 — 새벽시장",
+    description:
+      "10개 섹터별 AI 심층 분석 리포트. 매일 새벽 업데이트.",
+  },
+};
 
 const REPORT_ICONS: Record<ReportType, string> = {
   "us-market": "🇺🇸",
@@ -324,7 +336,7 @@ export default async function ReportsPage({
         </Link>
         <h1 className="text-xl font-bold">AI 리포트</h1>
         <p className="mt-1 text-xs text-[var(--color-muted)]">
-          7단계 AI 분석 파이프라인으로 생성된 심층 리포트
+          10단계 AI 분석 파이프라인으로 생성된 심층 리포트
         </p>
       </div>
 
@@ -339,7 +351,7 @@ export default async function ReportsPage({
           <div>
             <p className="text-sm font-semibold">{formatDate(reportSet.date)}</p>
             <p className="text-xs text-[var(--color-muted)]">
-              {reportSet.reports.length}/7 리포트 생성완료
+              {reportSet.reports.length}/10 리포트 생성완료
             </p>
           </div>
           <div className="text-right text-xs text-[var(--color-muted)]">
