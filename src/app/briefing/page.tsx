@@ -106,7 +106,7 @@ function StoryCard({ story }: { story: BriefingStory }) {
         <CategoryBadge category={story.category} />
         <SentimentBadge sentiment={story.sentiment} />
       </div>
-      <h3 className="mb-2 text-base font-bold leading-normal">{story.title}</h3>
+      <h3 className="mb-2 text-base font-semibold leading-normal">{story.title}</h3>
       <p className="text-sm leading-relaxed text-[var(--color-muted)]">
         {story.summary}
       </p>
@@ -138,7 +138,7 @@ function SectorCard({
       className={`rounded-r-xl border border-white/10 border-l-2 ${sentimentColors[sentiment]} bg-white/5 p-4`}
     >
       <div className="mb-1 flex items-center gap-2">
-        <span className="text-sm font-bold">{sector}</span>
+        <span className="text-sm font-semibold">{sector}</span>
         <SentimentBadge sentiment={sentiment} />
       </div>
       <p className="text-sm leading-relaxed text-[var(--color-muted)]">
@@ -225,7 +225,7 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
 
       {/* Market Overview */}
       <section>
-        <h3 className="flex items-center gap-2 mb-3 text-base font-bold">
+        <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
           <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
           시장 개요
         </h3>
@@ -251,7 +251,7 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
       {/* Top Stories */}
       {briefing.topStories.length > 0 && (
         <section>
-          <h3 className="flex items-center gap-2 mb-3 text-base font-bold">
+          <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
             <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
             주요 뉴스
           </h3>
@@ -266,7 +266,7 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
       {/* Sector Analysis */}
       {briefing.sectorAnalysis.length > 0 && (
         <section>
-          <h3 className="flex items-center gap-2 mb-3 text-base font-bold">
+          <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
             <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
             섹터 분석
           </h3>
@@ -286,7 +286,7 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
       {/* Action Items */}
       {briefing.actionItems.length > 0 && (
         <section>
-          <h3 className="flex items-center gap-2 mb-3 text-base font-bold">
+          <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
             <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
             오늘의 체크포인트
           </h3>

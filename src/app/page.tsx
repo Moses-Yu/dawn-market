@@ -69,7 +69,7 @@ export default async function Home() {
           {/* Top stories preview (first 3) */}
           {briefing.topStories.length > 0 && (
             <section>
-              <h3 className="flex items-center gap-2 mb-3 text-base font-bold">
+              <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
                 <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
                 주요 뉴스
               </h3>
@@ -103,7 +103,7 @@ export default async function Home() {
           {/* Market indices */}
           {briefing.marketOverview.keyIndices.length > 0 && (
             <section>
-              <h3 className="flex items-center gap-2 mb-3 text-base font-bold">
+              <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
                 <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
                 주요 지수
               </h3>

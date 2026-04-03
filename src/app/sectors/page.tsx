@@ -133,7 +133,7 @@ function SectorCard({
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-2">
           <span className="text-xl">{config.icon}</span>
-          <h3 className="font-bold text-base">{config.label}</h3>
+          <h3 className="font-semibold text-sm">{config.label}</h3>
         </div>
         <span
           className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${risk.bg} ${risk.text}`}
