@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const PUBLIC_PATHS = ["/", "/auth/login", "/auth/signup", "/auth/callback"];
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
@@ -26,7 +28,23 @@ export async function updateSession(request: NextRequest) {
   );
 
   // Refresh session if expired
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { pathname } = request.nextUrl;
+
+  // Allow API routes and public paths without auth
+  if (pathname.startsWith("/api/")) {
+    return supabaseResponse;
+  }
+
+  // Redirect unauthenticated users to login (except public paths)
+  if (!user && !PUBLIC_PATHS.includes(pathname)) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth/login";
+    return NextResponse.redirect(url);
+  }
 
   return supabaseResponse;
 }
