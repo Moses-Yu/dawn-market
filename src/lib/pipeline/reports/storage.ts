@@ -96,7 +96,7 @@ export async function getReportSetDates(
     .from("dawn_reports")
     .select("date, report_number")
     .order("date", { ascending: false })
-    .limit(limit * 7); // max 7 reports per date
+    .limit(limit * 10); // max 10 reports per date (7 original + 2b/2c/2d sectors)
 
   if (error) throw new Error(`getReportSetDates: ${error.message}`);
 
