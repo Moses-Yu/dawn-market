@@ -27,9 +27,6 @@ export default async function Home() {
         </p>
       </section>
 
-      {/* Push notification prompt */}
-      <PushPrompt />
-
       {/* Glossary link */}
       <Link
         href="/glossary"
@@ -146,6 +143,9 @@ export default async function Home() {
           </div>
         </section>
       )}
+
+      {/* Push notification prompt — bottom of page */}
+      <PushPrompt />
     </div>
   );
 }

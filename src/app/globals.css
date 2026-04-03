@@ -10,6 +10,9 @@
   --color-muted: #9ca3af;
   --color-market-up: #f87171;
   --color-market-down: #60a5fa;
+  --color-surface: rgba(255, 255, 255, 0.05);
+  --color-surface-hover: rgba(255, 255, 255, 0.1);
+  --color-border: rgba(255, 255, 255, 0.1);
   --bottom-nav-height: 4rem;
 }
 
@@ -17,6 +20,9 @@
   :root {
     --color-background: #ffffff;
     --color-foreground: #171717;
+    --color-surface: rgba(0, 0, 0, 0.03);
+    --color-surface-hover: rgba(0, 0, 0, 0.06);
+    --color-border: rgba(0, 0, 0, 0.1);
   }
 }
 

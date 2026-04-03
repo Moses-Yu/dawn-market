@@ -135,7 +135,7 @@ function SectorCard({
   };
   return (
     <div
-      className={`rounded-r-xl border border-white/10 border-l-2 ${sentimentColors[sentiment]} bg-white/5 p-3`}
+      className={`rounded-r-xl border border-white/10 border-l-2 ${sentimentColors[sentiment]} bg-white/5 p-4`}
     >
       <div className="mb-1 flex items-center gap-2">
         <span className="text-sm font-bold">{sector}</span>

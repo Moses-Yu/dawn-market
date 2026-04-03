@@ -68,7 +68,7 @@ export default async function SettingsPage() {
       <form action={logout}>
         <button
           type="submit"
-          className="w-full rounded-lg border border-[var(--color-danger)]/30 px-4 py-2.5 text-sm font-medium text-[var(--color-danger)] hover:bg-[var(--color-danger)]/10"
+          className="w-full rounded-xl border border-[var(--color-danger)]/30 px-4 py-2.5 text-sm font-medium text-[var(--color-danger)] hover:bg-[var(--color-danger)]/10"
         >
           로그아웃
         </button>
