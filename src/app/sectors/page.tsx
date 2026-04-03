@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getLatestReportSet } from "@/lib/pipeline/reports";
 import type { ReportType, MarketPrediction, DataPoint } from "@/lib/pipeline/reports";
+import { BarChart3 } from "lucide-react";
+import EmptyState from "@/components/EmptyState";
 
 const SECTOR_CONFIG: Record<
   string,
@@ -244,14 +246,12 @@ export default async function SectorsPage() {
           })}
         </div>
       ) : (
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 text-center">
-          <div className="text-3xl mb-3">📊</div>
-          <p className="text-sm text-[var(--color-muted)]">
-            섹터 데이터 준비 중...
-          </p>
-          <p className="text-xs text-[var(--color-muted)] mt-1">
-            AI가 4대 핵심 섹터를 분석하고 있습니다.
-          </p>
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+          <EmptyState
+            icon={BarChart3}
+            title="섹터 데이터 준비 중..."
+            description="AI가 4대 핵심 섹터를 분석하고 있습니다."
+          />
         </div>
       )}
 

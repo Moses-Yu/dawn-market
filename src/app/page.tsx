@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Loader } from "lucide-react";
 import { getLatestBriefing } from "@/lib/pipeline/storage";
 import SeverityBadge from "@/components/briefing/SeverityBadge";
 import PushPrompt from "@/components/push/PushPrompt";
+import EmptyState from "@/components/EmptyState";
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr + "T00:00:00");
@@ -133,14 +134,11 @@ export default async function Home() {
         </>
       ) : (
         <section className="rounded-xl border border-white/10 bg-white/5 p-4">
-          <div className="flex flex-col items-center py-6 text-center">
-            <div className="mb-3 text-3xl">🌅</div>
-            <p className="text-sm text-[var(--color-muted)]">
-              브리핑 준비 중...
-              <br />
-              AI가 해외 시장 뉴스를 분석하고 있습니다.
-            </p>
-          </div>
+          <EmptyState
+            icon={Loader}
+            title="브리핑 준비 중..."
+            description="AI가 해외 시장 뉴스를 분석하고 있습니다."
+          />
         </section>
       )}
 

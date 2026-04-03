@@ -9,6 +9,8 @@ import SeverityBadge from "@/components/briefing/SeverityBadge";
 import SentimentBadge from "@/components/briefing/SentimentBadge";
 import CategoryBadge from "@/components/briefing/CategoryBadge";
 import ShareButton from "@/components/briefing/ShareButton";
+import EmptyState from "@/components/EmptyState";
+import { Sunrise } from "lucide-react";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -148,17 +150,13 @@ function SectorCard({
   );
 }
 
-function EmptyState() {
+function BriefingEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center">
-      <div className="mb-4 text-4xl">🌅</div>
-      <h2 className="mb-2 text-lg font-bold">아직 브리핑이 없습니다</h2>
-      <p className="text-sm text-[var(--color-muted)]">
-        AI가 해외 시장 뉴스를 분석 중입니다.
-        <br />
-        첫 브리핑이 곧 준비될 예정입니다.
-      </p>
-    </div>
+    <EmptyState
+      icon={Sunrise}
+      title="아직 브리핑이 없습니다"
+      description="AI가 해외 시장 뉴스를 분석 중입니다. 첫 브리핑이 곧 준비될 예정입니다."
+    />
   );
 }
 
@@ -344,7 +342,7 @@ export default async function BriefingPage({ searchParams }: Props) {
   }
 
   if (!briefing) {
-    return <EmptyState />;
+    return <BriefingEmptyState />;
   }
 
   return <BriefingContent briefing={briefing} />;
