@@ -14,6 +14,7 @@ import type {
   ReportType,
 } from "@/lib/pipeline/reports";
 import ReportDateNav from "./ReportDateNav";
+import ReportAccordion from "./ReportAccordion";
 
 export const metadata: Metadata = {
   title: "AI 심층 리포트",
@@ -136,77 +137,80 @@ function SectionCard({ section }: { section: ReportSection }) {
   );
 }
 
-function ReportCard({
+function ReportCardHeader({
   reportNumber,
   reportType,
-  content,
-  generatedAt,
+  headline,
 }: {
   reportNumber: number;
   reportType: ReportType;
-  content: ReportContent;
-  generatedAt: string;
+  headline: string;
 }) {
   const icon = REPORT_ICONS[reportType] ?? "📄";
   const label = REPORT_LABELS[reportType] ?? reportType;
 
   return (
-    <details className="group rounded-xl border border-white/10 bg-white/[0.02] open:bg-white/[0.04]">
-      <summary className="flex cursor-pointer items-center gap-3 p-4 select-none">
-        <span className="text-xl">{icon}</span>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs font-medium tabular-nums">
-              #{reportNumber}
-            </span>
-            <span className="text-sm font-bold truncate">{label}</span>
-          </div>
-          <p className="mt-0.5 text-xs text-[var(--color-muted)] truncate">
-            {content.headline}
-          </p>
+    <>
+      <span className="text-xl">{icon}</span>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs font-medium tabular-nums">
+            #{reportNumber}
+          </span>
+          <span className="text-sm font-bold truncate">{label}</span>
         </div>
-        <span className="text-[var(--color-muted)] transition-transform group-open:rotate-90">
-          ▸
-        </span>
-      </summary>
-
-      <div className="space-y-3 px-4 pb-4">
-        {/* Headline */}
-        <div className="rounded-lg bg-white/5 p-3">
-          <h3 className="text-base font-bold">{content.headline}</h3>
-        </div>
-
-        {/* Prediction */}
-        {content.prediction && (
-          <PredictionBadge prediction={content.prediction} />
-        )}
-
-        {/* Sections */}
-        {content.sections?.map((section, i) => (
-          <SectionCard key={i} section={section} />
-        ))}
-
-        {/* Key Takeaways */}
-        {content.keyTakeaways && content.keyTakeaways.length > 0 && (
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-            <h4 className="mb-2 text-sm font-bold">핵심 포인트</h4>
-            <ul className="space-y-1.5">
-              {content.keyTakeaways.map((t, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm leading-relaxed">
-                  <span className="mt-0.5 text-[var(--color-primary)]">•</span>
-                  <span className="text-[var(--color-muted)]">{t}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Generated time */}
-        <div className="text-right text-xs text-[var(--color-muted)]">
-          생성: {new Date(generatedAt).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
-        </div>
+        <p className="mt-0.5 text-xs text-[var(--color-muted)] truncate">
+          {headline}
+        </p>
       </div>
-    </details>
+    </>
+  );
+}
+
+function ReportCardContent({
+  content,
+  generatedAt,
+}: {
+  content: ReportContent;
+  generatedAt: string;
+}) {
+  return (
+    <div className="space-y-3 px-4 pb-4">
+      {/* Headline */}
+      <div className="rounded-lg bg-white/5 p-3">
+        <h3 className="text-base font-bold">{content.headline}</h3>
+      </div>
+
+      {/* Prediction */}
+      {content.prediction && (
+        <PredictionBadge prediction={content.prediction} />
+      )}
+
+      {/* Sections */}
+      {content.sections?.map((section, i) => (
+        <SectionCard key={i} section={section} />
+      ))}
+
+      {/* Key Takeaways */}
+      {content.keyTakeaways && content.keyTakeaways.length > 0 && (
+        <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <h4 className="mb-2 text-sm font-bold">핵심 포인트</h4>
+          <ul className="space-y-1.5">
+            {content.keyTakeaways.map((t, i) => (
+              <li key={i} className="flex items-start gap-2 text-sm leading-relaxed">
+                <span className="mt-0.5 text-[var(--color-primary)]">•</span>
+                <span className="text-[var(--color-muted)]">{t}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Generated time */}
+      <div className="text-right text-xs text-[var(--color-muted)]">
+        생성: {new Date(generatedAt).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
+      </div>
+    </div>
   );
 }
 
@@ -271,17 +275,24 @@ function ReportSetView({ reportSet }: { reportSet: ReportSet }) {
           <span className="h-3 w-0.5 rounded-full bg-[var(--color-primary)]" />
           상세 리포트 ({otherReports.length}건)
         </h3>
-        <div className="space-y-2">
-          {otherReports.map((report) => (
-            <ReportCard
-              key={report.reportNumber}
-              reportNumber={report.reportNumber}
-              reportType={report.reportType}
-              content={report.content}
-              generatedAt={report.generatedAt}
-            />
-          ))}
-        </div>
+        <ReportAccordion
+          items={otherReports.map((report) => ({
+            key: String(report.reportNumber),
+            header: (
+              <ReportCardHeader
+                reportNumber={report.reportNumber}
+                reportType={report.reportType}
+                headline={report.content.headline}
+              />
+            ),
+            content: (
+              <ReportCardContent
+                content={report.content}
+                generatedAt={report.generatedAt}
+              />
+            ),
+          }))}
+        />
       </div>
     </div>
   );
