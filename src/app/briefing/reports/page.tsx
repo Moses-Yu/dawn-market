@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FileText } from "lucide-react";
-import EmptyState from "@/components/EmptyState";
 import {
   getLatestReportSet,
   getReportsByDate,
@@ -216,13 +214,17 @@ function ReportCardContent({
   );
 }
 
-function ReportsEmptyState() {
+function EmptyState() {
   return (
-    <EmptyState
-      icon={FileText}
-      title="리포트가 없습니다"
-      description="아직 생성된 리포트가 없습니다. 파이프라인이 실행되면 여기에 표시됩니다."
-    />
+    <div className="flex flex-col items-center justify-center py-16 text-center">
+      <div className="mb-4 text-4xl">📋</div>
+      <h2 className="mb-2 text-lg font-bold">리포트가 없습니다</h2>
+      <p className="text-sm text-[var(--color-muted)]">
+        아직 생성된 리포트가 없습니다.
+        <br />
+        파이프라인이 실행되면 여기에 표시됩니다.
+      </p>
+    </div>
   );
 }
 
@@ -374,7 +376,7 @@ export default async function ReportsPage({
       )}
 
       {/* Reports or empty state */}
-      {reportSet ? <ReportSetView reportSet={reportSet} /> : <ReportsEmptyState />}
+      {reportSet ? <ReportSetView reportSet={reportSet} /> : <EmptyState />}
 
       {/* Disclaimer */}
       <div className="rounded-lg border border-white/5 bg-white/[0.02] p-3 text-xs leading-relaxed text-[var(--color-muted)]">

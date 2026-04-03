@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getBriefingsList } from "@/lib/pipeline/storage";
-import { Archive } from "lucide-react";
-import EmptyState from "@/components/EmptyState";
+
 
 export const metadata: Metadata = {
   title: "브리핑 아카이브",
@@ -44,10 +43,12 @@ export default async function ArchivePage() {
       </div>
 
       {briefings.length === 0 ? (
-        <EmptyState
-          icon={Archive}
-          title="아직 저장된 브리핑이 없습니다"
-        />
+        <div className="py-12 text-center">
+          <div className="mb-3 text-3xl">📭</div>
+          <p className="text-sm text-[var(--color-muted)]">
+            아직 저장된 브리핑이 없습니다
+          </p>
+        </div>
       ) : (
         <div className="space-y-2">
           {briefings.map((b) => (
