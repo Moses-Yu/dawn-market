@@ -74,7 +74,7 @@ interface GenerateReportOptions {
   prompt: string;
   /** Whether to enable web search for real-time data (default: true) */
   enableWebSearch?: boolean;
-  /** Max tokens for the response (default: 2500) */
+  /** Max tokens for the response (default: 8000) */
   maxTokens?: number;
 }
 
@@ -90,7 +90,7 @@ interface GenerateReportResult {
 export async function generateReportWithSearch(
   options: GenerateReportOptions
 ): Promise<GenerateReportResult> {
-  const { prompt, enableWebSearch = true, maxTokens = 2500 } = options;
+  const { prompt, enableWebSearch = true, maxTokens = 8000 } = options;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tools: any[] = enableWebSearch
@@ -107,24 +107,52 @@ export async function generateReportWithSearch(
       ]
     : [];
 
-  const response = await anthropic.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: maxTokens,
-    tools,
-    output_config: {
-      format: {
-        type: "json_schema",
-        schema: REPORT_CONTENT_SCHEMA,
-      },
-    },
-    messages: [{ role: "user", content: prompt }],
-  });
+  const MAX_RETRIES = 3;
+  let response: Anthropic.Messages.Message | undefined;
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      response = await anthropic.messages.create({
+        model: "claude-sonnet-4-6",
+        max_tokens: maxTokens,
+        tools,
+        output_config: {
+          format: {
+            type: "json_schema",
+            schema: REPORT_CONTENT_SCHEMA,
+          },
+        },
+        messages: [{ role: "user", content: prompt }],
+      });
+      break;
+    } catch (err) {
+      const status = (err as { status?: number }).status;
+      if ((status === 529 || status === 503 || status === 500) && attempt < MAX_RETRIES) {
+        const delay = Math.pow(2, attempt) * 5000 + Math.random() * 2000;
+        console.log(`[GenerateReport] ${status} error, retrying in ${Math.round(delay / 1000)}s (attempt ${attempt + 1}/${MAX_RETRIES})`);
+        await new Promise((r) => setTimeout(r, delay));
+        continue;
+      }
+      throw err;
+    }
+  }
+  if (!response) throw new Error("Failed after retries");
 
-  // With structured outputs, the text block is guaranteed valid JSON
-  const textBlock = response.content.find((block) => block.type === "text");
+  console.log(`[GenerateReport] stop_reason=${response.stop_reason}, blocks=${response.content.length}, output_tokens=${response.usage.output_tokens}`);
+
+  // Check for truncated output
+  if (response.stop_reason === "max_tokens") {
+    throw new Error("Response truncated (max_tokens reached) — increase maxTokens");
+  }
+
+  // With web search, there may be multiple text blocks — the last one contains the JSON
+  const textBlocks = response.content.filter((block) => block.type === "text");
+  console.log(`[GenerateReport] ${textBlocks.length} text blocks found`);
+  const textBlock = textBlocks[textBlocks.length - 1];
   if (!textBlock || textBlock.type !== "text") {
     throw new Error("No text block in response");
   }
+
+  console.log(`[GenerateReport] text length=${textBlock.text.length}, first 100 chars: ${textBlock.text.substring(0, 100)}`);
 
   const content: ReportContent = JSON.parse(textBlock.text);
 

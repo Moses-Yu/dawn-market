@@ -58,7 +58,10 @@ const REPORT_GENERATORS: ReportGenerator[] = [
 export async function runReportPipeline(): Promise<PipelineResult> {
   const startTime = Date.now();
   const errors: string[] = [];
-  const today = new Date().toISOString().split("T")[0];
+  // Use Korean time (KST = UTC+9) for the report date
+  const today = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" })
+  ).toISOString().split("T")[0];
 
   console.log(`[Pipeline] Starting 10-report pipeline for ${today}`);
 
