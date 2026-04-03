@@ -83,7 +83,7 @@ ${keyMarket || "시장 데이터를 가져올 수 없습니다."}`;
 
   const result = await generateReportWithSearch({
     prompt,
-    maxTokens: 3000,
+    maxTokens: 8000,
   });
 
   return {
