@@ -4,6 +4,10 @@ import { getSectorPreferences } from "@/app/actions/preferences";
 import PushToggle from "@/components/push/PushToggle";
 import SectorPreferences from "@/components/settings/SectorPreferences";
 
+export const metadata = {
+  title: "설정",
+};
+
 export default async function SettingsPage() {
   const supabase = await createClient();
   const {
