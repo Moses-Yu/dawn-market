@@ -6,6 +6,7 @@ import {
   type Difficulty,
 } from "@/lib/glossary/terms";
 import type { Category } from "@/lib/pipeline/types";
+import { createClient } from "@/lib/supabase/server";
 import GlossaryClient from "./GlossaryClient";
 
 export const metadata = {
@@ -19,9 +20,25 @@ export const metadata = {
   },
 };
 
-// TODO: replace with Supabase query once migration 007 lands
 async function getTerms(): Promise<GlossaryTerm[]> {
-  return SEED_TERMS;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("glossary_terms")
+    .select("id, term_ko, term_en, definition_ko, category, difficulty, related_terms, example_ko")
+    .order("term_ko");
+
+  if (!data || data.length === 0) return SEED_TERMS;
+
+  return data.map((row) => ({
+    id: row.id,
+    termKo: row.term_ko,
+    termEn: row.term_en,
+    definitionKo: row.definition_ko,
+    category: row.category as Category,
+    difficulty: row.difficulty as Difficulty,
+    relatedTerms: row.related_terms ?? [],
+    exampleKo: row.example_ko,
+  }));
 }
 
 export default async function GlossaryPage() {
