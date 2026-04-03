@@ -1,5 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/app/actions/auth";
+import { getSectorPreferences } from "@/app/actions/preferences";
+import PushToggle from "@/components/push/PushToggle";
+import SectorPreferences from "@/components/settings/SectorPreferences";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -18,9 +21,27 @@ export default async function SettingsPage() {
     );
   }
 
+  const sectorPrefs = await getSectorPreferences();
+
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-bold">설정</h2>
+
+      {/* Sector preferences */}
+      <div className="space-y-2">
+        <h3 className="text-sm font-semibold text-[var(--color-muted)]">
+          관심 섹터
+        </h3>
+        <SectorPreferences initialSectors={sectorPrefs} />
+      </div>
+
+      {/* Push notifications */}
+      <div className="space-y-2">
+        <h3 className="text-sm font-semibold text-[var(--color-muted)]">
+          알림 설정
+        </h3>
+        <PushToggle />
+      </div>
 
       <div className="rounded-xl border border-[var(--color-muted)]/20 p-4 space-y-3">
         <h3 className="text-sm font-semibold text-[var(--color-muted)]">
