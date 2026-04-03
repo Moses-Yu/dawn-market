@@ -13,7 +13,7 @@ const CLASSIFICATION_PROMPT = `당신은 한국 개인투자자를 위한 금융
 다음 뉴스 기사들을 분석하고, 각 기사에 대해 JSON 형식으로 응답해주세요.
 
 분류 기준:
-- category: "semiconductor" (반도체/AI칩), "geopolitics" (지정학/전쟁/무역), "market" (시장 전반), "general" (기타)
+- category: "semiconductor" (반도체/AI칩/메모리), "shipbuilding-defense" (조선/방산/군수), "ai-infra" (AI 인프라/데이터센터/클라우드), "secondary-battery" (2차전지/배터리/EV), "geopolitics" (지정학/전쟁/무역), "market" (시장 전반), "general" (기타)
 - severity: "긴급" (즉시 대응 필요), "주의" (주시 필요), "참고" (참고용)
 - sentiment: "bullish" (호재), "bearish" (악재), "neutral" (중립)
 
@@ -24,7 +24,7 @@ const CLASSIFICATION_PROMPT = `당신은 한국 개인투자자를 위한 금융
   "articleSourceId": "원본 기사 sourceId",
   "title": "한국어 제목 (15자 이내)",
   "summaryKo": "초보 투자자를 위한 한국어 요약 (2-3문장)",
-  "category": "semiconductor|geopolitics|market|general",
+  "category": "semiconductor|shipbuilding-defense|ai-infra|secondary-battery|geopolitics|market|general",
   "severity": "긴급|주의|참고",
   "sentiment": "bullish|bearish|neutral",
   "sectorImpact": ["영향받는 섹터들"],

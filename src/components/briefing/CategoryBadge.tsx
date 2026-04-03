@@ -6,6 +6,21 @@ const config: Record<Category, { label: string; bg: string; text: string }> = {
     bg: "bg-blue-500/15",
     text: "text-blue-400",
   },
+  "shipbuilding-defense": {
+    label: "조선/방산",
+    bg: "bg-teal-500/15",
+    text: "text-teal-400",
+  },
+  "ai-infra": {
+    label: "AI 인프라",
+    bg: "bg-cyan-500/15",
+    text: "text-cyan-400",
+  },
+  "secondary-battery": {
+    label: "2차전지",
+    bg: "bg-green-500/15",
+    text: "text-green-400",
+  },
   geopolitics: {
     label: "지정학",
     bg: "bg-orange-500/15",

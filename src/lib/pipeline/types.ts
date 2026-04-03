@@ -1,5 +1,12 @@
 export type Severity = "긴급" | "주의" | "참고";
-export type Category = "semiconductor" | "geopolitics" | "market" | "general";
+export type Category =
+  | "semiconductor"
+  | "shipbuilding-defense"
+  | "ai-infra"
+  | "secondary-battery"
+  | "geopolitics"
+  | "market"
+  | "general";
 export type Sentiment = "bullish" | "bearish" | "neutral";
 
 export interface RawArticle {

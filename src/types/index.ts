@@ -2,7 +2,7 @@ export interface Briefing {
   id: string;
   title: string;
   summary: string;
-  category: "semiconductor" | "geopolitics" | "market" | "general";
+  category: "semiconductor" | "shipbuilding-defense" | "ai-infra" | "secondary-battery" | "geopolitics" | "market" | "general";
   sentiment: "bullish" | "bearish" | "neutral";
   publishedAt: string;
   createdAt: string;

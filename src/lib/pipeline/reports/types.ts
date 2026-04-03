@@ -1,0 +1,181 @@
+import type { MarketSnapshot, RawArticle, ArticleSummary } from "../types";
+
+export type ReportType =
+  | "us-market"
+  | "semiconductor"
+  | "shipbuilding-defense"
+  | "ai-infra"
+  | "secondary-battery"
+  | "geopolitical"
+  | "currency"
+  | "asian-premarket"
+  | "technical"
+  | "dawn-briefing";
+
+export const REPORT_ORDER: ReportType[] = [
+  "us-market",
+  "semiconductor",
+  "shipbuilding-defense",
+  "ai-infra",
+  "secondary-battery",
+  "geopolitical",
+  "currency",
+  "asian-premarket",
+  "technical",
+  "dawn-briefing",
+];
+
+export const REPORT_TITLES: Record<ReportType, string> = {
+  "us-market": "미국/글로벌 시장 마감 리포트",
+  semiconductor: "반도체 섹터 인텔리전스",
+  "shipbuilding-defense": "조선/방산 섹터 인텔리전스",
+  "ai-infra": "AI 인프라 섹터 인텔리전스",
+  "secondary-battery": "2차전지 섹터 인텔리전스",
+  geopolitical: "지정학 & 거시경제 리포트",
+  currency: "환율 & 채권 리포트",
+  "asian-premarket": "아시아 프리마켓 리포트",
+  technical: "기술적 분석 & 센티먼트 리포트",
+  "dawn-briefing": "새벽시장 종합 브리핑",
+};
+
+export interface Report {
+  reportNumber: number;
+  reportType: ReportType;
+  title: string;
+  date: string;
+  dataWindowStart: string; // ISO string, 07:30 KST previous day
+  dataWindowEnd: string; // ISO string, 07:30 KST today
+  content: ReportContent;
+  generatedAt: string;
+  modelUsed: string;
+  tokensUsed: number;
+}
+
+export interface ReportContent {
+  headline: string;
+  sections: ReportSection[];
+  prediction: MarketPrediction;
+  keyTakeaways: string[];
+}
+
+export interface ReportSection {
+  title: string;
+  body: string;
+  dataPoints?: DataPoint[];
+}
+
+export interface DataPoint {
+  label: string;
+  value: string;
+  change?: string;
+  sentiment?: "bullish" | "bearish" | "neutral";
+}
+
+export interface MarketPrediction {
+  direction: "up" | "down" | "sideways";
+  confidence: "high" | "medium" | "low";
+  summary: string;
+  factors: string[];
+}
+
+export interface ReportSet {
+  date: string;
+  dataWindowStart: string;
+  dataWindowEnd: string;
+  reports: Report[];
+  generatedAt: string;
+}
+
+// Data passed to each report generator
+export interface ReportInput {
+  date: string;
+  dataWindowStart: string;
+  dataWindowEnd: string;
+  marketData: MarketSnapshot[];
+  articles: RawArticle[];
+  summaries: ArticleSummary[];
+  previousReports: Report[]; // Reports generated earlier in the sequence
+}
+
+// Symbol groups for different report types
+export const US_MARKET_SYMBOLS = [
+  { symbol: "^GSPC", name: "S&P 500" },
+  { symbol: "^IXIC", name: "NASDAQ" },
+  { symbol: "^DJI", name: "Dow Jones" },
+  { symbol: "ES=F", name: "S&P 500 선물" },
+  { symbol: "NQ=F", name: "NASDAQ 선물" },
+  { symbol: "^VIX", name: "VIX 공포지수" },
+];
+
+export const SEMICONDUCTOR_SYMBOLS = [
+  { symbol: "NVDA", name: "NVIDIA" },
+  { symbol: "TSM", name: "TSMC" },
+  { symbol: "ASML", name: "ASML" },
+  { symbol: "AMD", name: "AMD" },
+  { symbol: "INTC", name: "Intel" },
+  { symbol: "AMAT", name: "Applied Materials" },
+  { symbol: "005930.KS", name: "삼성전자" },
+  { symbol: "000660.KS", name: "SK하이닉스" },
+];
+
+export const CURRENCY_SYMBOLS = [
+  { symbol: "USDKRW=X", name: "달러/원" },
+  { symbol: "USDJPY=X", name: "달러/엔" },
+  { symbol: "EURUSD=X", name: "유로/달러" },
+  { symbol: "^TNX", name: "미국 10년물 국채" },
+  { symbol: "^VIX", name: "VIX 공포지수" },
+];
+
+export const SHIPBUILDING_DEFENSE_SYMBOLS = [
+  { symbol: "329180.KS", name: "HD현대중공업" },
+  { symbol: "009540.KS", name: "HD한국조선해양" },
+  { symbol: "042660.KS", name: "한화오션" },
+  { symbol: "012450.KS", name: "한화에어로스페이스" },
+  { symbol: "LMT", name: "Lockheed Martin" },
+  { symbol: "RTX", name: "RTX (Raytheon)" },
+  { symbol: "NOC", name: "Northrop Grumman" },
+  { symbol: "GD", name: "General Dynamics" },
+];
+
+export const AI_INFRA_SYMBOLS = [
+  { symbol: "NVDA", name: "NVIDIA" },
+  { symbol: "MSFT", name: "Microsoft" },
+  { symbol: "GOOGL", name: "Alphabet" },
+  { symbol: "AMZN", name: "Amazon" },
+  { symbol: "AVGO", name: "Broadcom" },
+  { symbol: "MRVL", name: "Marvell Technology" },
+  { symbol: "035420.KS", name: "NAVER" },
+  { symbol: "035720.KS", name: "카카오" },
+];
+
+export const SECONDARY_BATTERY_SYMBOLS = [
+  { symbol: "373220.KS", name: "LG에너지솔루션" },
+  { symbol: "006400.KS", name: "삼성SDI" },
+  { symbol: "096770.KS", name: "SK이노베이션" },
+  { symbol: "247540.KS", name: "에코프로비엠" },
+  { symbol: "086520.KS", name: "에코프로" },
+  { symbol: "TSLA", name: "Tesla" },
+  { symbol: "CATL", name: "CATL (300750.SZ)" },
+  { symbol: "ALB", name: "Albemarle" },
+];
+
+export const ASIAN_SYMBOLS = [
+  { symbol: "^KS11", name: "KOSPI" },
+  { symbol: "^KQ11", name: "KOSDAQ" },
+  { symbol: "^N225", name: "Nikkei 225" },
+  { symbol: "^HSI", name: "Hang Seng" },
+  { symbol: "000300.SS", name: "CSI 300" },
+];
+
+// All symbols combined (deduplicated)
+export const ALL_SYMBOLS = [
+  ...US_MARKET_SYMBOLS,
+  ...SEMICONDUCTOR_SYMBOLS,
+  ...SHIPBUILDING_DEFENSE_SYMBOLS,
+  ...AI_INFRA_SYMBOLS,
+  ...SECONDARY_BATTERY_SYMBOLS,
+  ...CURRENCY_SYMBOLS,
+  ...ASIAN_SYMBOLS,
+].filter(
+  (s, i, arr) => arr.findIndex((x) => x.symbol === s.symbol) === i
+);
