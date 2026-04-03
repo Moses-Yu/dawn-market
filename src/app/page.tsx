@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { BookOpen } from "lucide-react";
 import { getLatestBriefing } from "@/lib/pipeline/storage";
 import SeverityBadge from "@/components/briefing/SeverityBadge";
+import PushPrompt from "@/components/push/PushPrompt";
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr + "T00:00:00");
@@ -24,6 +26,28 @@ export default async function Home() {
           해외 시장 뉴스와 AI 인사이트를 매일 새벽에 전달합니다.
         </p>
       </section>
+
+      {/* Push notification prompt */}
+      <PushPrompt />
+
+      {/* Glossary link */}
+      <Link
+        href="/glossary"
+        className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10"
+      >
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--color-primary)]/15">
+          <BookOpen className="h-5 w-5 text-[var(--color-primary)]" />
+        </div>
+        <div className="min-w-0">
+          <p className="text-sm font-bold">용어 사전</p>
+          <p className="text-xs text-[var(--color-muted)]">
+            초보 투자자를 위한 핵심 용어 모음
+          </p>
+        </div>
+        <span className="ml-auto shrink-0 text-xs text-[var(--color-primary)]">
+          보기 →
+        </span>
+      </Link>
 
       {briefing ? (
         <>

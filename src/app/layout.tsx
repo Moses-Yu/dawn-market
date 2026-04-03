@@ -4,14 +4,35 @@ import BottomNav from "@/components/layout/BottomNav";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "새벽시장 - Dawn Market",
+  title: {
+    default: "새벽시장 - Dawn Market",
+    template: "%s | 새벽시장",
+  },
   description:
-    "한국 초보 투자자를 위한 해외 시장 브리핑 & AI 인사이트",
+    "한국 초보 투자자를 위한 해외 시장 브리핑 & AI 인사이트. 매일 새벽, 밤사이 해외 시장 뉴스를 한눈에.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "새벽시장",
+  },
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    siteName: "새벽시장 Dawn Market",
+    title: "새벽시장 - 초보 투자자를 위한 AI 시장 브리핑",
+    description:
+      "밤사이 해외 시장에서 무슨 일이? 반도체·방산·AI·2차전지 섹터 뉴스를 AI가 매일 새벽 정리해드립니다.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "새벽시장 - Dawn Market",
+    description:
+      "밤사이 해외 시장에서 무슨 일이? AI가 매일 새벽 정리해드립니다.",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
