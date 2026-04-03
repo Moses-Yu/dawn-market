@@ -1,6 +1,7 @@
 import SeverityBadge from "@/components/briefing/SeverityBadge";
 import CategoryBadge from "@/components/briefing/CategoryBadge";
 import SentimentBadge from "@/components/briefing/SentimentBadge";
+import PaywallGate from "@/components/PaywallGate";
 import type { Alert } from "@/lib/pipeline/alert-engine";
 import type { Severity } from "@/lib/pipeline/types";
 import type { Category } from "@/lib/pipeline/types";
@@ -80,11 +81,40 @@ export default async function AlertsPage() {
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {alerts.map((alert) => (
-            <AlertCard key={alert.id} alert={alert} />
-          ))}
-        </div>
+        <>
+          {/* Regular alerts — visible to all */}
+          <div className="space-y-3">
+            {alerts
+              .filter((a) => a.severity !== "긴급")
+              .map((alert) => (
+                <AlertCard key={alert.id} alert={alert} />
+              ))}
+          </div>
+
+          {/* Critical/urgent alerts — Pro only */}
+          {alerts.some(
+            (a) => a.severity === "긴급"
+          ) && (
+            <div className="space-y-3">
+              <h3 className="flex items-center gap-2 text-sm font-bold text-[var(--color-muted)]">
+                <span className="h-3 w-0.5 rounded-full bg-red-400" />
+                긴급 알림
+              </h3>
+              <PaywallGate requiredTier="pro">
+                <div className="space-y-3">
+                  {alerts
+                    .filter(
+                      (a) =>
+                        a.severity === "긴급"
+                    )
+                    .map((alert) => (
+                      <AlertCard key={alert.id} alert={alert} />
+                    ))}
+                </div>
+              </PaywallGate>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

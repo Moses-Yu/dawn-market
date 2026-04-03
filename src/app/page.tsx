@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Sparkles } from "lucide-react";
 import { getLatestBriefing } from "@/lib/pipeline/storage";
 import { getLatestReportSet } from "@/lib/pipeline/reports";
+import { getUserSubscription } from "@/lib/subscription";
 import type { ReportType, MarketPrediction } from "@/lib/pipeline/reports";
 import SeverityBadge from "@/components/briefing/SeverityBadge";
 import PushPrompt from "@/components/push/PushPrompt";
@@ -64,6 +65,8 @@ export default async function Home() {
   } catch {
     reportSet = null;
   }
+
+  const { isPro } = await getUserSubscription();
 
   // Extract dawn-briefing headline from report set
   const dawnBriefing = reportSet?.reports.find(
@@ -243,7 +246,28 @@ export default async function Home() {
         </section>
       )}
 
-      {/* 6. Push notification prompt — bottom of page */}
+      {/* 6. Pro upgrade banner for free users */}
+      {!isPro && (
+        <Link
+          href="/pricing"
+          className="block rounded-xl border border-[var(--color-primary)]/20 bg-gradient-to-r from-[var(--color-primary)]/10 to-[var(--color-primary)]/5 p-4 transition-colors hover:from-[var(--color-primary)]/15 hover:to-[var(--color-primary)]/10"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">🚀</span>
+            <div className="flex-1">
+              <p className="text-sm font-bold">Pro로 업그레이드</p>
+              <p className="text-xs text-[var(--color-muted)]">
+                심층 리포트 10종 + 긴급 알림 + 무제한 아카이브
+              </p>
+            </div>
+            <span className="text-xs font-semibold text-[var(--color-primary)]">
+              월 9,900원 →
+            </span>
+          </div>
+        </Link>
+      )}
+
+      {/* 7. Push notification prompt — bottom of page */}
       <PushPrompt />
     </div>
   );

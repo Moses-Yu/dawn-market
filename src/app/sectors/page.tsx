@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { getLatestReportSet } from "@/lib/pipeline/reports";
 import type { ReportType, MarketPrediction, DataPoint } from "@/lib/pipeline/reports";
+import PaywallGate from "@/components/PaywallGate";
 
 
 const SECTOR_CONFIG: Record<
@@ -227,25 +228,68 @@ export default async function SectorsPage() {
       </div>
 
       {sectorReports.length > 0 ? (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {sectorReports.map((item) => {
-            if (!item) return null;
-            const { type, report } = item;
-            const allDataPoints = report.content.sections.flatMap(
-              (s) => s.dataPoints ?? []
-            );
-            return (
-              <SectorCard
-                key={type}
-                type={type}
-                headline={report.content.headline}
-                prediction={report.content.prediction}
-                keyTakeaways={report.content.keyTakeaways}
-                dataPoints={allDataPoints}
-              />
-            );
-          })}
-        </div>
+        <PaywallGate
+          requiredTier="pro"
+          fallback={
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {sectorReports.map((item) => {
+                if (!item) return null;
+                const { type, report } = item;
+                const config = SECTOR_CONFIG[type];
+                if (!config) return null;
+                const risk = getRiskLevel(report.content.prediction);
+                return (
+                  <div
+                    key={type}
+                    className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 space-y-2"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{config.icon}</span>
+                        <h3 className="font-semibold text-sm">{config.label}</h3>
+                      </div>
+                      <span
+                        className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${risk.bg} ${risk.text}`}
+                      >
+                        {risk.emoji} {risk.label}
+                      </span>
+                    </div>
+                    <p className="text-sm font-medium leading-snug">
+                      {report.content.headline}
+                    </p>
+                    <DirectionArrow prediction={report.content.prediction} />
+                    <Link
+                      href="/pricing"
+                      className="mt-2 block text-center text-xs text-[var(--color-primary)] hover:underline"
+                    >
+                      Pro 구독으로 상세 분석 보기 →
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+          }
+        >
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {sectorReports.map((item) => {
+              if (!item) return null;
+              const { type, report } = item;
+              const allDataPoints = report.content.sections.flatMap(
+                (s) => s.dataPoints ?? []
+              );
+              return (
+                <SectorCard
+                  key={type}
+                  type={type}
+                  headline={report.content.headline}
+                  prediction={report.content.prediction}
+                  keyTakeaways={report.content.keyTakeaways}
+                  dataPoints={allDataPoints}
+                />
+              );
+            })}
+          </div>
+        </PaywallGate>
       ) : (
         <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 text-center">
           <div className="text-3xl mb-3">📊</div>

@@ -13,6 +13,7 @@ import type {
   MarketPrediction,
   ReportType,
 } from "@/lib/pipeline/reports";
+import PaywallGate from "@/components/PaywallGate";
 import ReportDateNav from "./ReportDateNav";
 import ReportAccordion from "./ReportAccordion";
 
@@ -269,30 +270,32 @@ function ReportSetView({ reportSet }: { reportSet: ReportSet }) {
         </div>
       )}
 
-      {/* Individual reports */}
+      {/* Individual reports — Pro only */}
       <div>
         <h3 className="flex items-center gap-2 mb-3 text-sm font-bold text-[var(--color-muted)]">
           <span className="h-3 w-0.5 rounded-full bg-[var(--color-primary)]" />
           상세 리포트 ({otherReports.length}건)
         </h3>
-        <ReportAccordion
-          items={otherReports.map((report) => ({
-            key: String(report.reportNumber),
-            header: (
-              <ReportCardHeader
-                reportNumber={report.reportNumber}
-                reportType={report.reportType}
-                headline={report.content.headline}
-              />
-            ),
-            content: (
-              <ReportCardContent
-                content={report.content}
-                generatedAt={report.generatedAt}
-              />
-            ),
-          }))}
-        />
+        <PaywallGate requiredTier="pro">
+          <ReportAccordion
+            items={otherReports.map((report) => ({
+              key: String(report.reportNumber),
+              header: (
+                <ReportCardHeader
+                  reportNumber={report.reportNumber}
+                  reportType={report.reportType}
+                  headline={report.content.headline}
+                />
+              ),
+              content: (
+                <ReportCardContent
+                  content={report.content}
+                  generatedAt={report.generatedAt}
+                />
+              ),
+            }))}
+          />
+        </PaywallGate>
       </div>
     </div>
   );
