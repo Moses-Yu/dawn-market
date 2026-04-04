@@ -167,6 +167,48 @@ export const ASIAN_SYMBOLS = [
   { symbol: "000300.SS", name: "CSI 300" },
 ];
 
+export const COMMODITY_SYMBOLS = [
+  { symbol: "CL=F", name: "WTI 원유" },
+  { symbol: "GC=F", name: "금" },
+  { symbol: "HG=F", name: "구리" },
+];
+
+/**
+ * 원자재 → 영향받는 한국 섹터/종목 매핑
+ * 브리핑 프롬프트에서 자동 매핑 컨텍스트로 사용
+ */
+export const COMMODITY_KR_IMPACT: Record<
+  string,
+  { sectors: string[]; stocks: string[] }
+> = {
+  "CL=F": {
+    sectors: ["정유/화학", "항공", "해운"],
+    stocks: [
+      "SK이노베이션(096770)",
+      "S-Oil(010950)",
+      "대한항공(003490)",
+      "HMM(011200)",
+    ],
+  },
+  "GC=F": {
+    sectors: ["안전자산", "귀금속/광업"],
+    stocks: [
+      "한국금거래소(Korea Gold Exchange)",
+      "고려아연(010130)",
+      "풍산(103140)",
+    ],
+  },
+  "HG=F": {
+    sectors: ["조선/건설", "전선/케이블", "제조"],
+    stocks: [
+      "LS(006260)",
+      "LS전선(대한전선 009540 아님, 비상장)",
+      "HD현대중공업(329180)",
+      "포스코홀딩스(005490)",
+    ],
+  },
+};
+
 // All symbols combined (deduplicated)
 export const ALL_SYMBOLS = [
   ...US_MARKET_SYMBOLS,
@@ -176,6 +218,7 @@ export const ALL_SYMBOLS = [
   ...SECONDARY_BATTERY_SYMBOLS,
   ...CURRENCY_SYMBOLS,
   ...ASIAN_SYMBOLS,
+  ...COMMODITY_SYMBOLS,
 ].filter(
   (s, i, arr) => arr.findIndex((x) => x.symbol === s.symbol) === i
 );

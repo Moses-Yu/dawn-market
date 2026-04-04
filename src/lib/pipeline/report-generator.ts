@@ -8,6 +8,8 @@ import {
   AI_INFRA_SYMBOLS,
   SECONDARY_BATTERY_SYMBOLS,
   CURRENCY_SYMBOLS,
+  COMMODITY_SYMBOLS,
+  COMMODITY_KR_IMPACT,
 } from "./reports/types";
 import { filterMarketData } from "./reports/data-collector";
 import type { CollectedData } from "./reports/data-collector";
@@ -23,13 +25,13 @@ const CORE_REPORT_TYPES: ReportType[] = [
 ];
 
 const SYMBOL_MAP: Record<string, { symbol: string; name: string }[]> = {
-  "us-market": US_MARKET_SYMBOLS,
+  "us-market": [...US_MARKET_SYMBOLS, ...COMMODITY_SYMBOLS],
   semiconductor: SEMICONDUCTOR_SYMBOLS,
   "shipbuilding-defense": SHIPBUILDING_DEFENSE_SYMBOLS,
   "ai-infra": AI_INFRA_SYMBOLS,
   "secondary-battery": SECONDARY_BATTERY_SYMBOLS,
   currency: CURRENCY_SYMBOLS,
-  geopolitical: CURRENCY_SYMBOLS, // geopolitical uses macro indicators
+  geopolitical: [...CURRENCY_SYMBOLS, ...COMMODITY_SYMBOLS],
 };
 
 function buildPrompt(
@@ -57,6 +59,25 @@ function buildPrompt(
       ? `\n\n이전 리포트 요약 (중복 방지):\n${previousReports.map((r) => `- ${r.content.headline}`).join("\n")}`
       : "";
 
+  // Build commodity → Korean sector/stock mapping context for us-market report
+  const commodityContext =
+    reportType === "us-market"
+      ? `\n\n## 원자재 → 한국 섹터/종목 매핑 (반드시 섹션에 포함)
+아래 원자재의 야간 변동을 분석하고, 영향받는 한국 섹터와 종목을 매핑하세요.
+이 내용을 "원자재 동향" 이라는 별도 섹션으로 반드시 포함하세요.
+
+${COMMODITY_SYMBOLS.map((c) => {
+  const impact = COMMODITY_KR_IMPACT[c.symbol];
+  return `- **${c.name} (${c.symbol})**: 영향 섹터: ${impact.sectors.join(", ")} / 관련 종목: ${impact.stocks.join(", ")}`;
+}).join("\n")}
+
+각 원자재별로:
+1. 야간 가격 변동 (제공된 시장 데이터 기반)
+2. 변동 원인 (뉴스 기반, 간단히)
+3. 한국 시장 영향 (위 매핑 기반, 초보자 눈높이로)
+dataPoints에 각 원자재의 가격/변동/sentiment를 반드시 포함하세요.`
+      : "";
+
   return `당신은 한국 초보 투자자를 위한 시장 분석가입니다.
 새벽시장(Dawn Market) 플랫폼에서 매일 아침 전달되는 "${REPORT_TITLES[reportType]}" 리포트를 작성하세요.
 
@@ -77,6 +98,7 @@ ${marketSummary || "(관련 시장 데이터 없음)"}
 ## 오늘 주요 뉴스
 ${articleSummary || "(관련 뉴스 없음)"}
 ${prevContext}
+${commodityContext}
 
 ## 출력 형식 (JSON)
 아래 JSON 구조를 **정확히** 따르세요. JSON만 출력하고, 다른 텍스트는 포함하지 마세요.
