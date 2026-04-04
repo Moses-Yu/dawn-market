@@ -4,6 +4,12 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install",
   "regions": ["icn1"],
+  "crons": [
+    {
+      "path": "/api/cron/daily-reports",
+      "schedule": "0 21 * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/manifest.json",
