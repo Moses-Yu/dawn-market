@@ -1,11 +1,19 @@
 import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 import Header from "@/components/layout/Header";
 import BottomNav from "@/components/layout/BottomNav";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ClientErrorReporter from "@/components/ClientErrorReporter";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
-import FeedbackWidget from "@/components/FeedbackWidget";
+import LazyFeedbackWidget from "@/components/LazyFeedbackWidget";
 import "./globals.css";
+
+const pretendard = localFont({
+  src: "../../node_modules/pretendard/dist/web/variable/woff2/PretendardVariable.woff2",
+  display: "swap",
+  weight: "45 920",
+  variable: "--font-pretendard",
+});
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://dawn-market.vercel.app";
@@ -60,7 +68,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang="ko" className={pretendard.variable}>
       <head>
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
@@ -73,7 +81,7 @@ export default function RootLayout({
             <main className="flex-1 px-4 py-4 pb-20">{children}</main>
             <BottomNav />
           </div>
-          <FeedbackWidget />
+          <LazyFeedbackWidget />
         </ErrorBoundary>
       </body>
     </html>
