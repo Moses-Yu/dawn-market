@@ -2,11 +2,9 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
-import { getLatestBriefing } from "@/lib/pipeline/storage";
 import { getLatestReportSet } from "@/lib/pipeline/reports";
 import { getUserSubscription } from "@/lib/subscription";
-import type { ReportType, MarketPrediction } from "@/lib/pipeline/reports";
-import SeverityBadge from "@/components/briefing/SeverityBadge";
+import type { ReportType, MarketPrediction, DataPoint } from "@/lib/pipeline/reports";
 import PushPrompt from "@/components/push/PushPrompt";
 
 function formatDate(dateStr: string): string {
@@ -51,14 +49,23 @@ function getRiskBadge(prediction: MarketPrediction): {
   return { label: "안전", bg: "bg-green-500/15", text: "text-green-400" };
 }
 
-export default async function Home() {
-  let briefing;
-  try {
-    briefing = await getLatestBriefing();
-  } catch {
-    briefing = null;
-  }
+/** Extract market index data points from the us-market report */
+function extractMarketIndices(dataPoints: DataPoint[]) {
+  return dataPoints.slice(0, 4).map((dp) => {
+    const changeStr = dp.change || "";
+    const changeNum = parseFloat(changeStr.replace(/[^-\d.]/g, "")) || 0;
+    const isPositive = !changeStr.startsWith("-") && !changeStr.startsWith("▼");
+    return {
+      name: dp.label,
+      value: dp.value,
+      change: changeStr,
+      isPositive,
+      changeNum,
+    };
+  });
+}
 
+export default async function Home() {
   let reportSet;
   try {
     reportSet = await getLatestReportSet();
@@ -73,6 +80,16 @@ export default async function Home() {
     (r) => r.reportType === "dawn-briefing"
   );
 
+  // Extract us-market report for market indices
+  const usMarketReport = reportSet?.reports.find(
+    (r) => r.reportType === "us-market"
+  );
+  const marketIndices = usMarketReport
+    ? extractMarketIndices(
+        usMarketReport.content.sections.flatMap((s) => s.dataPoints ?? [])
+      )
+    : [];
+
   // Extract sector reports for risk badges
   const sectorReports = reportSet
     ? SECTOR_REPORT_TYPES.map((type) => {
@@ -84,13 +101,19 @@ export default async function Home() {
       }).filter(Boolean)
     : [];
 
+  // Use dawn-briefing keyTakeaways as top highlights
+  const highlights = dawnBriefing?.content.keyTakeaways ?? [];
+
+  // Use dawn-briefing sections as news-like items
+  const briefingSections = dawnBriefing?.content.sections ?? [];
+
   return (
     <div className="space-y-6">
       {/* 1. Date header + generation time */}
       <section>
         <h2 className="text-xl font-bold">
-          {briefing
-            ? `${formatDate(briefing.date)} 브리핑`
+          {reportSet
+            ? `${formatDate(reportSet.date)} 브리핑`
             : "오늘의 시장 브리핑"}
         </h2>
         <p className="text-sm text-[var(--color-muted)]">
@@ -100,36 +123,30 @@ export default async function Home() {
         </p>
       </section>
 
-      {briefing ? (
+      {reportSet ? (
         <>
           {/* 2. Major indices 2x2 grid */}
-          {briefing.marketOverview.keyIndices.length > 0 && (
+          {marketIndices.length > 0 && (
             <section>
               <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
                 <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
                 주요 지수
               </h3>
               <div className="grid grid-cols-2 gap-2">
-                {briefing.marketOverview.keyIndices.map((idx) => {
-                  const isPositive = idx.change >= 0;
-                  return (
+                {marketIndices.map((idx) => (
+                  <div
+                    key={idx.name}
+                    className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3"
+                  >
+                    <div className="text-sm font-semibold">{idx.name}</div>
+                    <div className="mt-1 text-sm tabular-nums">{idx.value}</div>
                     <div
-                      key={idx.symbol}
-                      className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3"
+                      className={`mt-1 text-xs font-medium ${idx.isPositive ? "text-[var(--color-market-up)]" : "text-[var(--color-market-down)]"}`}
                     >
-                      <div className="text-xs text-[var(--color-muted)]">
-                        {idx.symbol}
-                      </div>
-                      <div className="text-sm font-semibold">{idx.name}</div>
-                      <div
-                        className={`mt-1 text-xs font-medium ${isPositive ? "text-[var(--color-market-up)]" : "text-[var(--color-market-down)]"}`}
-                      >
-                        {isPositive ? "▲" : "▼"}{" "}
-                        {Math.abs(idx.changePercent).toFixed(2)}%
-                      </div>
+                      {idx.change}
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
               </div>
             </section>
           )}
@@ -155,35 +172,32 @@ export default async function Home() {
             </Link>
           )}
 
-          {/* 4. Top 3 news stories */}
-          {briefing.topStories.length > 0 && (
+          {/* 4. Key takeaways from dawn-briefing */}
+          {highlights.length > 0 && (
             <section>
               <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
                 <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
                 주요 뉴스
               </h3>
               <div className="space-y-2">
-                {briefing.topStories.slice(0, 3).map((story, i) => (
+                {highlights.slice(0, 3).map((item, i) => (
                   <Link
                     key={i}
-                    href={`/briefing?date=${briefing.date}`}
+                    href="/briefing/reports"
                     className="block rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3 transition-colors hover:bg-[var(--color-surface-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
                   >
-                    <div className="mb-1.5 flex items-center gap-1.5">
-                      <SeverityBadge severity={story.severity} />
-                    </div>
                     <div className="text-sm font-semibold leading-normal">
-                      {story.title}
+                      {item}
                     </div>
                   </Link>
                 ))}
               </div>
-              {briefing.topStories.length > 3 && (
+              {highlights.length > 3 && (
                 <Link
-                  href={`/briefing?date=${briefing.date}`}
+                  href="/briefing/reports"
                   className="mt-2 block text-center text-xs text-[var(--color-primary)] hover:underline"
                 >
-                  +{briefing.topStories.length - 3}건 더 보기
+                  +{highlights.length - 3}건 더 보기
                 </Link>
               )}
             </section>

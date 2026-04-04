@@ -1,39 +1,61 @@
+export const dynamic = "force-dynamic";
+
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  getLatestBriefing,
-  getBriefingByDate,
-} from "@/lib/pipeline/storage";
-import type { MorningBriefing, BriefingStory } from "@/lib/pipeline/types";
-import SeverityBadge from "@/components/briefing/SeverityBadge";
+  getLatestReportSet,
+  getReportsByDate,
+} from "@/lib/pipeline/reports";
+import type {
+  ReportSet,
+  Report,
+  ReportSection,
+  DataPoint,
+  MarketPrediction,
+} from "@/lib/pipeline/reports";
 import SentimentBadge from "@/components/briefing/SentimentBadge";
-import CategoryBadge from "@/components/briefing/CategoryBadge";
 import ShareButton from "@/components/briefing/ShareButton";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
+async function getReportSet(
+  date?: string
+): Promise<ReportSet | null> {
+  if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    const reports = await getReportsByDate(date);
+    if (reports.length === 0) return null;
+    return {
+      date,
+      dataWindowStart: reports[0].dataWindowStart,
+      dataWindowEnd: reports[0].dataWindowEnd,
+      reports,
+      generatedAt: reports[reports.length - 1].generatedAt,
+    };
+  }
+  return getLatestReportSet();
+}
+
 export async function generateMetadata({
   searchParams,
 }: Props): Promise<Metadata> {
   const { date } = await searchParams;
-  let briefing: MorningBriefing | null = null;
+  const reportSet = await getReportSet(
+    typeof date === "string" ? date : undefined
+  );
 
-  if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    briefing = await getBriefingByDate(date);
-  } else {
-    briefing = await getLatestBriefing();
-  }
-
-  if (!briefing) {
+  if (!reportSet) {
     return { title: "시장 브리핑" };
   }
 
-  const d = new Date(briefing.date + "T00:00:00");
+  const dawnBriefing = reportSet.reports.find(
+    (r) => r.reportType === "dawn-briefing"
+  );
+  const d = new Date(reportSet.date + "T00:00:00");
   const dateLabel = `${d.getMonth() + 1}월 ${d.getDate()}일`;
   const summary =
-    briefing.marketOverview.summary?.slice(0, 120) ||
+    dawnBriefing?.content.headline?.slice(0, 120) ||
     "오늘의 해외 시장 브리핑을 확인하세요";
 
   return {
@@ -43,7 +65,7 @@ export async function generateMetadata({
       title: `${dateLabel} 새벽시장 브리핑`,
       description: summary,
       type: "article",
-      publishedTime: briefing.generatedAt,
+      publishedTime: reportSet.generatedAt,
     },
     twitter: {
       card: "summary",
@@ -59,91 +81,117 @@ function formatDate(dateStr: string): string {
   return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일 (${weekdays[d.getDay()]})`;
 }
 
-function MarketIndexCard({
-  symbol,
-  name,
-  price,
-  change,
-  changePercent,
-}: {
-  symbol: string;
-  name: string;
-  price: number;
-  change: number;
-  changePercent: number;
-}) {
-  const isPositive = change >= 0;
+function DataPointRow({ dp }: { dp: DataPoint }) {
+  const sentimentColor =
+    dp.sentiment === "bullish"
+      ? "text-[var(--color-market-up)]"
+      : dp.sentiment === "bearish"
+        ? "text-[var(--color-market-down)]"
+        : "text-gray-400";
+
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-      <div className="mb-1 text-xs text-[var(--color-muted)]">{symbol}</div>
-      <div className="text-sm font-semibold">{name}</div>
-      <div className="mt-1 text-lg font-bold tabular-nums">
-        {price.toLocaleString("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}
-      </div>
-      <div
-        className={`mt-0.5 text-xs font-medium ${isPositive ? "text-[var(--color-market-up)]" : "text-[var(--color-market-down)]"}`}
-      >
-        {isPositive ? "▲" : "▼"}{" "}
-        {Math.abs(change).toLocaleString("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}{" "}
-        ({isPositive ? "+" : ""}
-        {changePercent.toFixed(2)}%)
+    <div className="flex items-center justify-between text-xs">
+      <span className="text-[var(--color-muted)]">{dp.label}</span>
+      <div className="flex items-center gap-2">
+        <span>{dp.value}</span>
+        {dp.change && <span className={sentimentColor}>{dp.change}</span>}
       </div>
     </div>
   );
 }
 
-function StoryCard({ story }: { story: BriefingStory }) {
+function MarketDataSection({ dataPoints }: { dataPoints: DataPoint[] }) {
+  if (dataPoints.length === 0) return null;
+  return (
+    <div className="grid grid-cols-2 gap-2">
+      {dataPoints.slice(0, 6).map((dp, i) => {
+        const sentimentColor =
+          dp.sentiment === "bullish"
+            ? "text-[var(--color-market-up)]"
+            : dp.sentiment === "bearish"
+              ? "text-[var(--color-market-down)]"
+              : "text-gray-400";
+        return (
+          <div
+            key={i}
+            className="rounded-xl border border-white/10 bg-white/5 p-3"
+          >
+            <div className="text-sm font-semibold">{dp.label}</div>
+            <div className="mt-1 text-sm tabular-nums">{dp.value}</div>
+            {dp.change && (
+              <div className={`mt-0.5 text-xs font-medium ${sentimentColor}`}>
+                {dp.change}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function ReportSectionCard({ section }: { section: ReportSection }) {
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-      <div className="mb-2 flex flex-wrap items-center gap-1.5">
-        <SeverityBadge severity={story.severity} />
-        <CategoryBadge category={story.category} />
-        <SentimentBadge sentiment={story.sentiment} />
-      </div>
-      <h3 className="mb-2 text-base font-semibold leading-normal">{story.title}</h3>
-      <p className="text-sm leading-relaxed text-[var(--color-muted)]">
-        {story.summary}
+      <h4 className="mb-2 text-sm font-semibold">{section.title}</h4>
+      <p className="text-sm leading-relaxed text-[var(--color-muted)] whitespace-pre-line">
+        {section.body}
       </p>
-      {story.sources.length > 0 && (
-        <div className="mt-2 text-xs text-[var(--color-muted)]">
-          출처: {story.sources.join(", ")}
+      {section.dataPoints && section.dataPoints.length > 0 && (
+        <div className="mt-3 space-y-1.5 rounded-lg bg-white/5 p-2.5">
+          {section.dataPoints.map((dp, i) => (
+            <DataPointRow key={i} dp={dp} />
+          ))}
         </div>
       )}
     </div>
   );
 }
 
-function SectorCard({
-  sector,
-  outlook,
-  sentiment,
-}: {
-  sector: string;
-  outlook: string;
-  sentiment: "bullish" | "bearish" | "neutral";
-}) {
-  const sentimentColors = {
-    bullish: "border-l-green-500",
-    bearish: "border-l-red-500",
-    neutral: "border-l-gray-500",
+function PredictionCard({ prediction }: { prediction: MarketPrediction }) {
+  const dirConfig = {
+    up: { arrow: "▲", color: "text-[var(--color-market-up)]", label: "상승" },
+    down: {
+      arrow: "▼",
+      color: "text-[var(--color-market-down)]",
+      label: "하락",
+    },
+    sideways: { arrow: "→", color: "text-gray-400", label: "보합" },
   };
+  const c = dirConfig[prediction.direction];
+  const confLabel =
+    prediction.confidence === "high"
+      ? "높음"
+      : prediction.confidence === "medium"
+        ? "중간"
+        : "낮음";
+
   return (
-    <div
-      className={`rounded-r-xl border border-white/10 border-l-2 ${sentimentColors[sentiment]} bg-white/5 p-4`}
-    >
-      <div className="mb-1 flex items-center gap-2">
-        <span className="text-sm font-semibold">{sector}</span>
-        <SentimentBadge sentiment={sentiment} />
+    <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+      <div className="flex items-center gap-3 mb-2">
+        <span className={`text-lg font-bold ${c.color}`}>
+          {c.arrow} {c.label}
+        </span>
+        <span className="text-xs text-[var(--color-muted)]">
+          확신도: {confLabel}
+        </span>
       </div>
       <p className="text-sm leading-relaxed text-[var(--color-muted)]">
-        {outlook}
+        {prediction.summary}
       </p>
+      {prediction.factors.length > 0 && (
+        <ul className="mt-2 space-y-1">
+          {prediction.factors.map((f, i) => (
+            <li
+              key={i}
+              className="flex items-start gap-2 text-xs text-[var(--color-muted)]"
+            >
+              <span className="mt-0.5 text-[var(--color-primary)]">•</span>
+              <span>{f}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
@@ -162,15 +210,22 @@ function EmptyState() {
   );
 }
 
-function BriefingJsonLd({ briefing }: { briefing: MorningBriefing }) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dawn-market.vercel.app";
+function BriefingJsonLd({
+  reportSet,
+  headline,
+}: {
+  reportSet: ReportSet;
+  headline: string;
+}) {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://dawn-market.vercel.app";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: `${briefing.date} 새벽시장 브리핑`,
-    description: briefing.marketOverview.summary?.slice(0, 200),
-    datePublished: briefing.generatedAt,
-    dateModified: briefing.generatedAt,
+    headline: `${reportSet.date} 새벽시장 브리핑`,
+    description: headline.slice(0, 200),
+    datePublished: reportSet.generatedAt,
+    dateModified: reportSet.generatedAt,
     author: {
       "@type": "Organization",
       name: "새벽시장 Dawn Market",
@@ -182,7 +237,7 @@ function BriefingJsonLd({ briefing }: { briefing: MorningBriefing }) {
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${siteUrl}/briefing?date=${briefing.date}`,
+      "@id": `${siteUrl}/briefing?date=${reportSet.date}`,
     },
     inLanguage: "ko",
     articleSection: "Market Briefing",
@@ -196,14 +251,36 @@ function BriefingJsonLd({ briefing }: { briefing: MorningBriefing }) {
   );
 }
 
-function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
+function BriefingContent({ reportSet }: { reportSet: ReportSet }) {
+  const dawnBriefing = reportSet.reports.find(
+    (r) => r.reportType === "dawn-briefing"
+  );
+  const usMarketReport = reportSet.reports.find(
+    (r) => r.reportType === "us-market"
+  );
+
+  // Use dawn-briefing as primary, fall back to us-market
+  const primaryReport = dawnBriefing || usMarketReport;
+  if (!primaryReport) return <EmptyState />;
+
+  const headline = primaryReport.content.headline;
+  const sections = primaryReport.content.sections;
+  const prediction = primaryReport.content.prediction;
+  const keyTakeaways = primaryReport.content.keyTakeaways;
+
+  // Get market data from us-market report
+  const marketDataPoints = usMarketReport
+    ? usMarketReport.content.sections.flatMap((s) => s.dataPoints ?? [])
+    : [];
+
   return (
     <div className="space-y-6">
-      <BriefingJsonLd briefing={briefing} />
+      <BriefingJsonLd reportSet={reportSet} headline={headline} />
+
       {/* Header */}
       <div className="mb-6">
         <p className="text-xs text-[var(--color-muted)]">
-          {new Date(briefing.date + "T00:00:00").toLocaleDateString("ko-KR", {
+          {new Date(reportSet.date + "T00:00:00").toLocaleDateString("ko-KR", {
             year: "numeric",
             month: "long",
             day: "numeric",
@@ -213,7 +290,7 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
         <h1 className="mt-0.5 text-2xl font-bold">오늘의 시장 브리핑</h1>
         <div className="mt-1 text-xs text-[var(--color-muted)]">
           생성:{" "}
-          {new Date(briefing.generatedAt).toLocaleTimeString("ko-KR", {
+          {new Date(reportSet.generatedAt).toLocaleTimeString("ko-KR", {
             hour: "2-digit",
             minute: "2-digit",
           })}
@@ -221,70 +298,54 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
       </div>
 
       {/* Share */}
-      <ShareButton date={briefing.date} />
+      <ShareButton date={reportSet.date} />
 
-      {/* Market Overview */}
+      {/* Headline */}
       <section>
-        <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
-          <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
-          시장 개요
-        </h3>
-        <p className="mb-4 text-sm leading-relaxed text-[var(--color-muted)]">
-          {briefing.marketOverview.summary}
+        <p className="mb-4 text-sm font-medium leading-relaxed">
+          {headline}
         </p>
-        {briefing.marketOverview.keyIndices.length > 0 && (
-          <div className="grid grid-cols-2 gap-2">
-            {briefing.marketOverview.keyIndices.map((idx) => (
-              <MarketIndexCard
-                key={idx.symbol}
-                symbol={idx.symbol}
-                name={idx.name}
-                price={idx.price}
-                change={idx.change}
-                changePercent={idx.changePercent}
-              />
-            ))}
-          </div>
-        )}
       </section>
 
-      {/* Top Stories */}
-      {briefing.topStories.length > 0 && (
+      {/* Market Overview (from us-market report) */}
+      {marketDataPoints.length > 0 && (
         <section>
           <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
             <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
-            주요 뉴스
+            시장 개요
+          </h3>
+          <MarketDataSection dataPoints={marketDataPoints} />
+        </section>
+      )}
+
+      {/* Sections */}
+      {sections.length > 0 && (
+        <section>
+          <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
+            <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
+            상세 분석
           </h3>
           <div className="space-y-3">
-            {briefing.topStories.map((story, i) => (
-              <StoryCard key={i} story={story} />
+            {sections.map((s, i) => (
+              <ReportSectionCard key={i} section={s} />
             ))}
           </div>
         </section>
       )}
 
-      {/* Sector Analysis */}
-      {briefing.sectorAnalysis.length > 0 && (
+      {/* Prediction */}
+      {prediction && (
         <section>
           <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
             <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
-            섹터 분석
+            시장 전망
           </h3>
-          <div className="space-y-2">
-            {briefing.sectorAnalysis.map((sa, i) => (
-              <SectorCard
-                key={i}
-                sector={sa.sector}
-                outlook={sa.outlook}
-                sentiment={sa.sentiment}
-              />
-            ))}
-          </div>
+          <PredictionCard prediction={prediction} />
         </section>
       )}
 
-      {/* Action Items */}
-      {briefing.actionItems.length > 0 && (
+      {/* Key Takeaways */}
+      {keyTakeaways.length > 0 && (
         <section>
           <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
             <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
@@ -292,7 +353,7 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
           </h3>
           <div className="rounded-xl border border-white/10 bg-white/5 p-4">
             <ul className="space-y-2">
-              {briefing.actionItems.map((item, i) => (
+              {keyTakeaways.map((item, i) => (
                 <li
                   key={i}
                   className="flex items-start gap-2 text-sm leading-relaxed"
@@ -335,17 +396,18 @@ function BriefingContent({ briefing }: { briefing: MorningBriefing }) {
 export default async function BriefingPage({ searchParams }: Props) {
   const { date } = await searchParams;
 
-  let briefing: MorningBriefing | null = null;
-
-  if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    briefing = await getBriefingByDate(date);
-  } else {
-    briefing = await getLatestBriefing();
+  let reportSet: ReportSet | null = null;
+  try {
+    reportSet = await getReportSet(
+      typeof date === "string" ? date : undefined
+    );
+  } catch {
+    reportSet = null;
   }
 
-  if (!briefing) {
+  if (!reportSet || reportSet.reports.length === 0) {
     return <EmptyState />;
   }
 
-  return <BriefingContent briefing={briefing} />;
+  return <BriefingContent reportSet={reportSet} />;
 }

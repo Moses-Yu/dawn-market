@@ -1,5 +1,4 @@
 import type { MetadataRoute } from "next";
-import { getBriefingsList } from "@/lib/pipeline/storage";
 import { getReportSetDates } from "@/lib/pipeline/reports";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dawn-market.vercel.app";
@@ -44,25 +43,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Add individual briefing dates
-  try {
-    const briefings = await getBriefingsList(90);
-    for (const b of briefings) {
-      entries.push({
-        url: `${SITE_URL}/briefing?date=${b.date}`,
-        lastModified: new Date(b.generatedAt),
-        changeFrequency: "never",
-        priority: 0.5,
-      });
-    }
-  } catch {
-    // DB may not be available during build
-  }
-
-  // Add report set dates
+  // Add report set dates (briefing + reports pages)
   try {
     const reportDates = await getReportSetDates(90);
     for (const rd of reportDates) {
+      entries.push({
+        url: `${SITE_URL}/briefing?date=${rd.date}`,
+        lastModified: new Date(rd.date + "T07:30:00+09:00"),
+        changeFrequency: "never",
+        priority: 0.5,
+      });
       entries.push({
         url: `${SITE_URL}/briefing/reports?date=${rd.date}`,
         lastModified: new Date(rd.date + "T07:30:00+09:00"),

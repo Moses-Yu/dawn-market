@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getBriefingsList } from "@/lib/pipeline/storage";
+import { getReportSetDates } from "@/lib/pipeline/reports";
 
 
 export const metadata: Metadata = {
@@ -22,11 +22,11 @@ function formatDate(dateStr: string): string {
 }
 
 export default async function ArchivePage() {
-  let briefings: Awaited<ReturnType<typeof getBriefingsList>> = [];
+  let dates: { date: string; reportCount: number }[] = [];
   try {
-    briefings = await getBriefingsList(30);
+    dates = await getReportSetDates(30);
   } catch {
-    briefings = [];
+    dates = [];
   }
 
   return (
@@ -44,7 +44,7 @@ export default async function ArchivePage() {
         </p>
       </div>
 
-      {briefings.length === 0 ? (
+      {dates.length === 0 ? (
         <div className="py-12 text-center">
           <div className="mb-3 text-3xl">📭</div>
           <p className="text-sm text-[var(--color-muted)]">
@@ -53,18 +53,18 @@ export default async function ArchivePage() {
         </div>
       ) : (
         <div className="space-y-2">
-          {briefings.map((b) => (
+          {dates.map((d) => (
             <Link
-              key={b.id}
-              href={`/briefing?date=${b.date}`}
+              key={d.date}
+              href={`/briefing?date=${d.date}`}
               className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
             >
               <div>
                 <div className="text-sm font-semibold">
-                  {formatDate(b.date)}
+                  {formatDate(d.date)}
                 </div>
                 <div className="mt-0.5 text-xs text-[var(--color-muted)]">
-                  뉴스 {b.storyCount}건
+                  리포트 {d.reportCount}건
                 </div>
               </div>
               <span className="text-[var(--color-muted)]">→</span>
