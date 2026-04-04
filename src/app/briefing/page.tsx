@@ -15,6 +15,9 @@ import type {
 } from "@/lib/pipeline/reports";
 import SentimentBadge from "@/components/briefing/SentimentBadge";
 import ShareButton from "@/components/briefing/ShareButton";
+import PaywallGate from "@/components/PaywallGate";
+import PersonalizedBriefing from "@/components/briefing/PersonalizedBriefing";
+import WatchlistUpsellBanner from "@/components/briefing/WatchlistUpsellBanner";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -373,6 +376,11 @@ function BriefingContent({ reportSet }: { reportSet: ReportSet }) {
           </div>
         </section>
       )}
+
+      {/* Personalized Watchlist Briefing (Pro) / Upsell Banner (Free) */}
+      <PaywallGate fallback={<WatchlistUpsellBanner />}>
+        <PersonalizedBriefing />
+      </PaywallGate>
 
       {/* Disclaimer */}
       <div className="rounded-lg border border-white/5 bg-white/[0.02] p-3 text-xs leading-relaxed text-[var(--color-muted)]">
