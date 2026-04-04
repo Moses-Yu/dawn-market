@@ -22,7 +22,7 @@ export default async function PricingPage() {
   const { isPro } = await getUserSubscription();
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-sm space-y-6">
       <div className="text-center">
         <h1 className="text-2xl font-bold">요금제</h1>
         <p className="mt-1 text-sm text-[var(--color-muted)]">
@@ -31,33 +31,9 @@ export default async function PricingPage() {
       </div>
 
       <div className="grid gap-4">
-        {/* Free tier */}
-        <div className="rounded-2xl border border-[var(--color-border)] p-5">
-          <div className="mb-4">
-            <h2 className="text-lg font-bold">무료</h2>
-            <p className="mt-1 text-3xl font-bold">
-              ₩0<span className="text-sm font-normal text-[var(--color-muted)]">/월</span>
-            </p>
-          </div>
-          <ul className="space-y-2.5">
-            {FEATURES.map((f) => (
-              <li key={f.name} className="flex items-center gap-2 text-sm">
-                {f.free ? (
-                  <Check className="h-4 w-4 shrink-0 text-[var(--color-success)]" />
-                ) : (
-                  <X className="h-4 w-4 shrink-0 text-[var(--color-muted)]" />
-                )}
-                <span className={f.free ? "" : "text-[var(--color-muted)]"}>
-                  {f.name}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Pro tier */}
+        {/* Pro tier — shown first as recommended */}
         <div className="rounded-2xl border-2 border-[var(--color-primary)] p-5">
-          <div className="mb-1 inline-block rounded-full bg-[var(--color-primary)]/10 px-3 py-0.5 text-xs font-semibold text-[var(--color-primary)]">
+          <div className="mb-1 inline-block rounded-full bg-[var(--color-primary)] px-2 py-0.5 text-xs font-bold text-white">
             추천
           </div>
           <div className="mb-4">
@@ -69,14 +45,6 @@ export default async function PricingPage() {
               </span>
             </p>
           </div>
-          <ul className="mb-5 space-y-2.5">
-            {FEATURES.map((f) => (
-              <li key={f.name} className="flex items-center gap-2 text-sm">
-                <Check className="h-4 w-4 shrink-0 text-[var(--color-success)]" />
-                {f.name}
-              </li>
-            ))}
-          </ul>
           {isPro ? (
             <div className="rounded-lg bg-[var(--color-success)]/10 px-4 py-2.5 text-center text-sm font-semibold text-[var(--color-success)]">
               현재 구독 중
@@ -90,6 +58,59 @@ export default async function PricingPage() {
             </Link>
           )}
         </div>
+
+        {/* Free tier */}
+        <div className="rounded-2xl border border-[var(--color-border)] p-5">
+          <div className="mb-4">
+            <h2 className="text-lg font-bold">무료</h2>
+            <p className="mt-1 text-3xl font-bold">
+              ₩0
+              <span className="text-sm font-normal text-[var(--color-muted)]">
+                /월
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Feature comparison table */}
+      <div className="rounded-2xl border border-[var(--color-border)] p-4">
+        <h3 className="mb-3 text-sm font-bold">기능 비교</h3>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-[var(--color-border)]">
+              <th className="pb-2 text-left font-normal text-[var(--color-muted)]">
+                기능
+              </th>
+              <th className="w-14 pb-2 text-center font-normal text-[var(--color-muted)]">
+                무료
+              </th>
+              <th className="w-14 pb-2 text-center font-normal text-[var(--color-muted)]">
+                Pro
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {FEATURES.map((f) => (
+              <tr
+                key={f.name}
+                className="border-b border-[var(--color-border)] last:border-0"
+              >
+                <td className="py-2.5">{f.name}</td>
+                <td className="py-2.5 text-center">
+                  {f.free ? (
+                    <Check className="mx-auto h-4 w-4 text-[var(--color-success)]" />
+                  ) : (
+                    <X className="mx-auto h-4 w-4 text-[var(--color-muted)]" />
+                  )}
+                </td>
+                <td className="py-2.5 text-center">
+                  <Check className="mx-auto h-4 w-4 text-[var(--color-success)]" />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <p className="text-center text-xs text-[var(--color-muted)]">
