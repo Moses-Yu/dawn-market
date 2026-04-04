@@ -3,6 +3,8 @@ import Header from "@/components/layout/Header";
 import BottomNav from "@/components/layout/BottomNav";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ClientErrorReporter from "@/components/ClientErrorReporter";
+import AnalyticsProvider from "@/components/AnalyticsProvider";
+import FeedbackWidget from "@/components/FeedbackWidget";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -57,12 +59,14 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <ClientErrorReporter />
+        <AnalyticsProvider />
         <ErrorBoundary>
           <div className="mx-auto flex min-h-dvh max-w-lg flex-col">
             <Header />
             <main className="flex-1 px-4 py-4 pb-20">{children}</main>
             <BottomNav />
           </div>
+          <FeedbackWidget />
         </ErrorBoundary>
       </body>
     </html>
