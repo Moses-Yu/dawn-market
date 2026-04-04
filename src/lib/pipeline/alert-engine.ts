@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@supabase/supabase-js";
-import { sendPushToAll } from "@/lib/push/server";
+import { sendAlertPushByTier } from "@/lib/push/server";
 import type { ArticleSummary, Severity, Category, Sentiment } from "./types";
 
 const anthropic = new Anthropic();
@@ -299,7 +299,7 @@ export async function runAlertScan(
   const alertId = await storeAlert(alert);
   alert.id = alertId;
 
-  // Push notification
+  // Push notification — filtered by subscription tier
   let pushResult: { sent: number; failed: number } | undefined;
   try {
     const severityEmoji =
@@ -308,12 +308,15 @@ export async function runAlertScan(
         : alert.severity === "주의"
           ? "🟡"
           : "🟢";
-    const result = await sendPushToAll({
-      title: `${severityEmoji} ${alert.title}`,
-      body: alert.body,
-      url: "/alerts",
-      tag: `alert-${alertId}`,
-    });
+    const result = await sendAlertPushByTier(
+      {
+        title: `${severityEmoji} ${alert.title}`,
+        body: alert.body,
+        url: "/alerts",
+        tag: `alert-${alertId}`,
+      },
+      alert.severity
+    );
     pushResult = { sent: result.sent, failed: result.failed };
     alert.pushed = true;
     alert.pushedAt = new Date().toISOString();
