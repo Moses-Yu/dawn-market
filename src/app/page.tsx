@@ -5,7 +5,7 @@ import { Sparkles } from "lucide-react";
 import { getLatestReportSet } from "@/lib/pipeline/reports";
 import { getUserSubscription } from "@/lib/subscription";
 import type { ReportType, MarketPrediction, DataPoint } from "@/lib/pipeline/reports";
-import PushPrompt from "@/components/push/PushPrompt";
+import HomeCTA from "@/components/home/HomeCTA";
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr + "T00:00:00");
@@ -135,9 +135,10 @@ export default async function Home() {
               </h3>
               <div className="grid grid-cols-2 gap-2">
                 {marketIndices.map((idx) => (
-                  <div
+                  <Link
                     key={idx.name}
-                    className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3"
+                    href="/briefing/reports"
+                    className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3 transition-colors hover:bg-[var(--color-surface-hover)]"
                   >
                     <div className="text-sm font-semibold">{idx.name}</div>
                     <div className="mt-1 text-sm tabular-nums">{idx.value}</div>
@@ -146,7 +147,7 @@ export default async function Home() {
                     >
                       {idx.change}
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </section>
@@ -261,29 +262,8 @@ export default async function Home() {
         </section>
       )}
 
-      {/* 6. Pro upgrade banner for free users */}
-      {!isPro && (
-        <Link
-          href="/pricing"
-          className="block rounded-xl border border-[var(--color-primary)]/20 bg-gradient-to-r from-[var(--color-primary)]/10 to-[var(--color-primary)]/5 p-4 transition-colors hover:from-[var(--color-primary)]/15 hover:to-[var(--color-primary)]/10"
-        >
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🚀</span>
-            <div className="flex-1">
-              <p className="text-sm font-bold">Pro로 업그레이드</p>
-              <p className="text-xs text-[var(--color-muted)]">
-                심층 리포트 10종 + 긴급 알림 + 무제한 아카이브
-              </p>
-            </div>
-            <span className="text-xs font-semibold text-[var(--color-primary)]">
-              월 9,900원 →
-            </span>
-          </div>
-        </Link>
-      )}
-
-      {/* 7. Push notification prompt — bottom of page */}
-      <PushPrompt />
+      {/* 6. Single CTA — push or upgrade, never both */}
+      <HomeCTA isPro={isPro} />
     </div>
   );
 }
