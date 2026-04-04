@@ -1,34 +1,14 @@
 import { NextResponse } from "next/server";
-import { runAlertScan } from "@/lib/pipeline/alert-engine";
-import { summarizeArticles } from "@/lib/pipeline/summarizer";
-import { collectNews } from "@/lib/pipeline/news-collector";
+import { getRecentAlerts } from "@/lib/pipeline/alert-engine";
 
-export async function POST(request: Request) {
-  const authHeader = request.headers.get("authorization");
-  const expectedKey = process.env.PIPELINE_API_KEY;
-  if (expectedKey && authHeader !== `Bearer ${expectedKey}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export async function GET() {
   try {
-    // Collect and summarize fresh news
-    const collection = await collectNews();
-    const summarization = await summarizeArticles(
-      collection.articles,
-      collection.marketData
-    );
-
-    // Run alert scan
-    const result = await runAlertScan(summarization.summaries);
-
-    return NextResponse.json({
-      success: true,
-      ...result,
-    });
+    const alerts = await getRecentAlerts(20);
+    return NextResponse.json({ alerts });
   } catch (error) {
-    console.error("Alert scan failed:", error);
+    console.error("Alert fetch error:", error);
     return NextResponse.json(
-      { error: "Alert scan failed", details: String(error) },
+      { error: "Failed to fetch alerts", details: String(error) },
       { status: 500 }
     );
   }

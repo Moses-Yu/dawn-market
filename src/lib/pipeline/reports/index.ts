@@ -1,4 +1,3 @@
-export { runReportPipeline } from "./orchestrator";
 export { collectAllData, getDataWindow } from "./data-collector";
 export {
   storeReport,
