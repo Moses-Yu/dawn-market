@@ -108,8 +108,29 @@ export default async function Home() {
   // Use dawn-briefing keyTakeaways as top highlights
   const highlights = dawnBriefing?.content.keyTakeaways ?? [];
 
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://dawn-market.vercel.app";
+  const webSiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "새벽시장 Dawn Market",
+    url: siteUrl,
+    description:
+      "한국 초보 투자자를 위한 해외 시장 브리핑 & AI 인사이트. 매일 새벽, 밤사이 해외 시장 뉴스를 한눈에.",
+    inLanguage: "ko",
+    publisher: {
+      "@type": "Organization",
+      name: "새벽시장 Dawn Market",
+      url: siteUrl,
+    },
+  };
+
   return (
     <div className="space-y-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteJsonLd) }}
+      />
       {/* 1. Date header + generation time */}
       <section>
         <h2 className="text-xl font-bold">

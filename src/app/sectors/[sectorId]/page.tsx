@@ -210,6 +210,16 @@ export async function generateMetadata({ params }: { params: Promise<{ sectorId:
     title: `${config.label} 섹터 딥다이브`,
     description: config.description,
     alternates: { canonical: `/sectors/${sectorId}` },
+    openGraph: {
+      title: `${config.icon} ${config.label} 섹터 딥다이브 | 새벽시장`,
+      description: config.description,
+      type: "article",
+    },
+    twitter: {
+      card: "summary",
+      title: `${config.label} 섹터 딥다이브`,
+      description: config.description,
+    },
   };
 }
 

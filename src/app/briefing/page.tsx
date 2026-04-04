@@ -69,7 +69,7 @@ export async function generateMetadata({
       publishedTime: reportSet.generatedAt,
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: `${dateLabel} 새벽시장 브리핑`,
       description: summary,
     },
@@ -222,7 +222,7 @@ function BriefingJsonLd({
     process.env.NEXT_PUBLIC_SITE_URL || "https://dawn-market.vercel.app";
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "NewsArticle",
     headline: `${reportSet.date} 새벽시장 브리핑`,
     description: headline.slice(0, 200),
     datePublished: reportSet.generatedAt,
@@ -235,11 +235,17 @@ function BriefingJsonLd({
     publisher: {
       "@type": "Organization",
       name: "새벽시장 Dawn Market",
+      url: siteUrl,
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}/icons/icon-512x512.png`,
+      },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": `${siteUrl}/briefing?date=${reportSet.date}`,
     },
+    image: `${siteUrl}/briefing/opengraph-image?date=${reportSet.date}`,
     inLanguage: "ko",
     articleSection: "Market Briefing",
   };

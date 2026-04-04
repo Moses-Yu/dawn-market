@@ -7,6 +7,17 @@ export const metadata: Metadata = {
   title: "요금제",
   description: "새벽시장 Pro 구독으로 심층 리포트와 실시간 알림을 받아보세요.",
   alternates: { canonical: "/pricing" },
+  openGraph: {
+    title: "새벽시장 요금제 — Pro ₩9,900/월",
+    description:
+      "심층 섹터 리포트, 아카이브 무제한, 실시간 알림까지. 초보 투자자를 위한 Pro 플랜.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "새벽시장 요금제",
+    description: "심층 섹터 리포트, 아카이브 무제한, 실시간 알림까지.",
+  },
 };
 
 const FEATURES = [
