@@ -10,6 +10,8 @@ const CATEGORY_COLORS: Record<Category, string> = {
   "shipbuilding-defense": "bg-teal-500/15 text-teal-400",
   "ai-infra": "bg-cyan-500/15 text-cyan-400",
   "secondary-battery": "bg-green-500/15 text-green-400",
+  "bio-healthcare": "bg-pink-500/15 text-pink-400",
+  finance: "bg-amber-500/15 text-amber-400",
   geopolitics: "bg-orange-500/15 text-orange-400",
   market: "bg-purple-500/15 text-purple-400",
   general: "bg-gray-500/15 text-gray-400",

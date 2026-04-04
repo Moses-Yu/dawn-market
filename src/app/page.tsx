@@ -27,6 +27,8 @@ const SECTOR_CONFIG: Record<string, { label: string; icon: string }> = {
   "shipbuilding-defense": { label: "조선/방산", icon: "🚢" },
   "ai-infra": { label: "AI 인프라", icon: "🤖" },
   "secondary-battery": { label: "2차전지", icon: "🔋" },
+  "bio-healthcare": { label: "바이오/헬스케어", icon: "🧬" },
+  finance: { label: "금융/은행", icon: "🏦" },
 };
 
 const SECTOR_REPORT_TYPES: ReportType[] = [
@@ -34,6 +36,8 @@ const SECTOR_REPORT_TYPES: ReportType[] = [
   "shipbuilding-defense",
   "ai-infra",
   "secondary-battery",
+  "bio-healthcare",
+  "finance",
 ];
 
 function getRiskBadge(prediction: MarketPrediction): {

@@ -7,6 +7,8 @@ const SECTOR_REPORT_TYPES: ReportType[] = [
   "shipbuilding-defense",
   "ai-infra",
   "secondary-battery",
+  "bio-healthcare",
+  "finance",
 ];
 
 export async function GET() {

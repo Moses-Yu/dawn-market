@@ -6,6 +6,8 @@ export type ReportType =
   | "shipbuilding-defense"
   | "ai-infra"
   | "secondary-battery"
+  | "bio-healthcare"
+  | "finance"
   | "geopolitical"
   | "currency"
   | "asian-premarket"
@@ -18,6 +20,8 @@ export const REPORT_ORDER: ReportType[] = [
   "shipbuilding-defense",
   "ai-infra",
   "secondary-battery",
+  "bio-healthcare",
+  "finance",
   "geopolitical",
   "currency",
   "asian-premarket",
@@ -31,6 +35,8 @@ export const REPORT_TITLES: Record<ReportType, string> = {
   "shipbuilding-defense": "조선/방산 섹터 인텔리전스",
   "ai-infra": "AI 인프라 섹터 인텔리전스",
   "secondary-battery": "2차전지 섹터 인텔리전스",
+  "bio-healthcare": "바이오/헬스케어 섹터 인텔리전스",
+  finance: "금융/은행 섹터 인텔리전스",
   geopolitical: "지정학 & 거시경제 리포트",
   currency: "환율 & 채권 리포트",
   "asian-premarket": "아시아 프리마켓 리포트",
@@ -159,6 +165,28 @@ export const SECONDARY_BATTERY_SYMBOLS = [
   { symbol: "ALB", name: "Albemarle" },
 ];
 
+export const BIO_HEALTHCARE_SYMBOLS = [
+  { symbol: "207940.KS", name: "삼성바이오로직스" },
+  { symbol: "068270.KS", name: "셀트리온" },
+  { symbol: "326030.KS", name: "SK바이오팜" },
+  { symbol: "145020.KS", name: "휴젤" },
+  { symbol: "JNJ", name: "Johnson & Johnson" },
+  { symbol: "PFE", name: "Pfizer" },
+  { symbol: "LLY", name: "Eli Lilly" },
+  { symbol: "NVO", name: "Novo Nordisk" },
+];
+
+export const FINANCE_SYMBOLS = [
+  { symbol: "105560.KS", name: "KB금융" },
+  { symbol: "055550.KS", name: "신한지주" },
+  { symbol: "086790.KS", name: "하나금융지주" },
+  { symbol: "316140.KS", name: "우리금융지주" },
+  { symbol: "JPM", name: "JPMorgan Chase" },
+  { symbol: "GS", name: "Goldman Sachs" },
+  { symbol: "^TNX", name: "미국 10년물 국채" },
+  { symbol: "USDKRW=X", name: "달러/원" },
+];
+
 export const ASIAN_SYMBOLS = [
   { symbol: "^KS11", name: "KOSPI" },
   { symbol: "^KQ11", name: "KOSDAQ" },
@@ -216,6 +244,8 @@ export const ALL_SYMBOLS = [
   ...SHIPBUILDING_DEFENSE_SYMBOLS,
   ...AI_INFRA_SYMBOLS,
   ...SECONDARY_BATTERY_SYMBOLS,
+  ...BIO_HEALTHCARE_SYMBOLS,
+  ...FINANCE_SYMBOLS,
   ...CURRENCY_SYMBOLS,
   ...ASIAN_SYMBOLS,
   ...COMMODITY_SYMBOLS,

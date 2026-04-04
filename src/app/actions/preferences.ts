@@ -7,6 +7,8 @@ const VALID_SECTORS = [
   "shipbuilding-defense",
   "ai-infra",
   "secondary-battery",
+  "bio-healthcare",
+  "finance",
 ];
 
 export async function updateSectorPreferences(sectors: string[]) {

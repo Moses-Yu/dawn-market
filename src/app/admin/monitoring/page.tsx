@@ -13,6 +13,8 @@ const REPORT_TYPES = [
   "shipbuilding-defense",
   "ai-infra",
   "secondary-battery",
+  "bio-healthcare",
+  "finance",
   "geopolitical",
   "dawn-briefing",
 ];

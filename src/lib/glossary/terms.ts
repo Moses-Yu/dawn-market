@@ -24,6 +24,8 @@ const CATEGORY_LABELS: Record<Category, string> = {
   "shipbuilding-defense": "조선/방산",
   "ai-infra": "AI 인프라",
   "secondary-battery": "2차전지",
+  "bio-healthcare": "바이오/헬스케어",
+  finance: "금융/은행",
   geopolitics: "지정학",
   market: "시장",
   general: "일반",

@@ -7,6 +7,8 @@ export type PremiumSector =
   | "shipbuilding-defense"
   | "ai-infra"
   | "secondary-battery"
+  | "bio-healthcare"
+  | "finance"
   | "market-overview"
   | "geopolitical"
   | "all-sectors";
@@ -17,6 +19,8 @@ export const SECTOR_TO_REPORT_TYPES: Record<PremiumSector, ReportType[]> = {
   "shipbuilding-defense": ["shipbuilding-defense"],
   "ai-infra": ["ai-infra"],
   "secondary-battery": ["secondary-battery"],
+  "bio-healthcare": ["bio-healthcare"],
+  finance: ["finance"],
   "market-overview": ["us-market", "asian-premarket", "currency", "technical"],
   geopolitical: ["geopolitical"],
   "all-sectors": [
@@ -25,6 +29,8 @@ export const SECTOR_TO_REPORT_TYPES: Record<PremiumSector, ReportType[]> = {
     "shipbuilding-defense",
     "ai-infra",
     "secondary-battery",
+    "bio-healthcare",
+    "finance",
     "geopolitical",
     "currency",
     "asian-premarket",
@@ -38,6 +44,8 @@ export const SECTOR_TITLES: Record<PremiumSector, string> = {
   "shipbuilding-defense": "조선/방산 섹터 주간/월간 인텔리전스",
   "ai-infra": "AI 인프라 섹터 주간/월간 인텔리전스",
   "secondary-battery": "2차전지 섹터 주간/월간 인텔리전스",
+  "bio-healthcare": "바이오/헬스케어 섹터 주간/월간 인텔리전스",
+  finance: "금융/은행 섹터 주간/월간 인텔리전스",
   "market-overview": "시장 종합 주간/월간 리포트",
   geopolitical: "지정학 & 거시경제 주간/월간 리포트",
   "all-sectors": "전체 섹터 종합 리포트",
@@ -49,6 +57,8 @@ export const SECTOR_PRICES: Record<PremiumSector, number> = {
   "shipbuilding-defense": 5900,
   "ai-infra": 5900,
   "secondary-battery": 5900,
+  "bio-healthcare": 5900,
+  finance: 5900,
   "market-overview": 7900,
   geopolitical: 3900,
   "all-sectors": 9900,

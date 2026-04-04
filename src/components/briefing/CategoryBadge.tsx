@@ -21,6 +21,16 @@ const config: Record<Category, { label: string; bg: string; text: string }> = {
     bg: "bg-green-500/15",
     text: "text-green-400",
   },
+  "bio-healthcare": {
+    label: "바이오/헬스케어",
+    bg: "bg-pink-500/15",
+    text: "text-pink-400",
+  },
+  finance: {
+    label: "금융/은행",
+    bg: "bg-amber-500/15",
+    text: "text-amber-400",
+  },
   geopolitics: {
     label: "지정학",
     bg: "bg-orange-500/15",

@@ -4,6 +4,8 @@ export type Category =
   | "shipbuilding-defense"
   | "ai-infra"
   | "secondary-battery"
+  | "bio-healthcare"
+  | "finance"
   | "geopolitics"
   | "market"
   | "general";

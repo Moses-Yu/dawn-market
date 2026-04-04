@@ -3,6 +3,8 @@ export const VALID_SECTORS = [
   "shipbuilding-defense",
   "ai-infra",
   "secondary-battery",
+  "bio-healthcare",
+  "finance",
 ] as const;
 
 export type SectorType = (typeof VALID_SECTORS)[number];

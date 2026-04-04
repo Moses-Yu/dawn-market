@@ -34,6 +34,18 @@ const SECTOR_CONFIG: Record<
     companies: ["LG에너지솔루션", "삼성SDI", "에코프로비엠"],
     color: "green",
   },
+  "bio-healthcare": {
+    label: "바이오/헬스케어",
+    icon: "🧬",
+    companies: ["삼성바이오로직스", "셀트리온", "Eli Lilly", "Novo Nordisk"],
+    color: "pink",
+  },
+  finance: {
+    label: "금융/은행",
+    icon: "🏦",
+    companies: ["KB금융", "신한지주", "하나금융지주", "JPMorgan"],
+    color: "amber",
+  },
 };
 
 const SECTOR_REPORT_TYPES: ReportType[] = [
@@ -41,6 +53,8 @@ const SECTOR_REPORT_TYPES: ReportType[] = [
   "shipbuilding-defense",
   "ai-infra",
   "secondary-battery",
+  "bio-healthcare",
+  "finance",
 ];
 
 function getRiskLevel(prediction: MarketPrediction): {
@@ -231,7 +245,7 @@ export default async function SectorsPage() {
         <p className="text-sm text-[var(--color-muted)] mt-1">
           {reportSet
             ? `${formatDate(reportSet.date)} 기준 · 밤사이 이벤트가 각 섹터에 미치는 영향`
-            : "4대 핵심 섹터 실시간 영향 분석"}
+            : "6대 핵심 섹터 실시간 영향 분석"}
         </p>
       </div>
 
@@ -305,7 +319,7 @@ export default async function SectorsPage() {
             섹터 데이터 준비 중...
           </p>
           <p className="text-xs text-[var(--color-muted)] mt-1">
-            AI가 4대 핵심 섹터를 분석하고 있습니다.
+            AI가 6대 핵심 섹터를 분석하고 있습니다.
           </p>
         </div>
       )}

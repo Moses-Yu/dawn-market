@@ -7,6 +7,8 @@ import {
   SHIPBUILDING_DEFENSE_SYMBOLS,
   AI_INFRA_SYMBOLS,
   SECONDARY_BATTERY_SYMBOLS,
+  BIO_HEALTHCARE_SYMBOLS,
+  FINANCE_SYMBOLS,
   CURRENCY_SYMBOLS,
   COMMODITY_SYMBOLS,
   COMMODITY_KR_IMPACT,
@@ -20,6 +22,8 @@ const CORE_REPORT_TYPES: ReportType[] = [
   "shipbuilding-defense",
   "ai-infra",
   "secondary-battery",
+  "bio-healthcare",
+  "finance",
   "geopolitical",
   "currency",
 ];
@@ -30,6 +34,8 @@ const SYMBOL_MAP: Record<string, { symbol: string; name: string }[]> = {
   "shipbuilding-defense": SHIPBUILDING_DEFENSE_SYMBOLS,
   "ai-infra": AI_INFRA_SYMBOLS,
   "secondary-battery": SECONDARY_BATTERY_SYMBOLS,
+  "bio-healthcare": BIO_HEALTHCARE_SYMBOLS,
+  finance: FINANCE_SYMBOLS,
   currency: CURRENCY_SYMBOLS,
   geopolitical: [...CURRENCY_SYMBOLS, ...COMMODITY_SYMBOLS],
 };

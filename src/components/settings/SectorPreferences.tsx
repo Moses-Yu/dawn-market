@@ -28,6 +28,18 @@ const SECTORS = [
     icon: "🔋",
     description: "LG에너지솔루션, 삼성SDI, 에코프로비엠",
   },
+  {
+    id: "bio-healthcare",
+    label: "바이오/헬스케어",
+    icon: "🧬",
+    description: "삼성바이오로직스, 셀트리온, Eli Lilly, Novo Nordisk",
+  },
+  {
+    id: "finance",
+    label: "금융/은행",
+    icon: "🏦",
+    description: "KB금융, 신한지주, 하나금융지주, JPMorgan",
+  },
 ];
 
 export default function SectorPreferences({

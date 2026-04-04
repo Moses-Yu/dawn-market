@@ -49,6 +49,22 @@ const SECTOR_CONFIG: Record<
     color: "green",
     description: "EV 배터리 수요, 리튬·니켈 원자재 가격, 미국 IRA·유럽 배터리 규제 동향",
   },
+  "bio-healthcare": {
+    label: "바이오/헬스케어",
+    icon: "🧬",
+    reportType: "bio-healthcare",
+    companies: ["삼성바이오로직스", "셀트리온", "SK바이오팜", "휴젤", "Johnson & Johnson", "Pfizer", "Eli Lilly", "Novo Nordisk"],
+    color: "pink",
+    description: "바이오시밀러·신약 파이프라인, GLP-1 비만치료제 시장, FDA 승인·임상 동향",
+  },
+  finance: {
+    label: "금융/은행",
+    icon: "🏦",
+    reportType: "finance",
+    companies: ["KB금융", "신한지주", "하나금융지주", "우리금융지주", "JPMorgan Chase", "Goldman Sachs"],
+    color: "amber",
+    description: "한미 금리 정책, 은행 실적·배당, 가계부채 동향, 글로벌 금융시장 리스크",
+  },
 };
 
 const VALID_SECTORS = Object.keys(SECTOR_CONFIG);
