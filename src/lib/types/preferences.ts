@@ -26,6 +26,12 @@ export interface UserPreferences {
   updatedAt: string;
 }
 
+export interface WatchlistEntry {
+  symbol: string;
+  name: string;
+  sector: SectorType;
+}
+
 export interface UserPreferencesInput {
   preferredSectors?: string[];
   alertSeverityThreshold?: string;
