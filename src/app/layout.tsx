@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import Header from "@/components/layout/Header";
 import BottomNav from "@/components/layout/BottomNav";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import ClientErrorReporter from "@/components/ClientErrorReporter";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -54,11 +56,14 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className="antialiased">
-        <div className="mx-auto flex min-h-dvh max-w-lg flex-col">
-          <Header />
-          <main className="flex-1 px-4 py-4 pb-20">{children}</main>
-          <BottomNav />
-        </div>
+        <ClientErrorReporter />
+        <ErrorBoundary>
+          <div className="mx-auto flex min-h-dvh max-w-lg flex-col">
+            <Header />
+            <main className="flex-1 px-4 py-4 pb-20">{children}</main>
+            <BottomNav />
+          </div>
+        </ErrorBoundary>
       </body>
     </html>
   );
