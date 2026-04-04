@@ -54,3 +54,27 @@ export async function getSectorPreferences(): Promise<string[]> {
 
   return data?.interests ?? [];
 }
+
+export interface WatchlistItem {
+  symbol: string;
+  name: string;
+  sector: string;
+}
+
+export async function getWatchlist(): Promise<WatchlistItem[]> {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return [];
+
+  const { data } = await supabase
+    .from("user_preferences")
+    .select("watchlist")
+    .eq("user_id", user.id)
+    .single();
+
+  return data?.watchlist ?? [];
+}

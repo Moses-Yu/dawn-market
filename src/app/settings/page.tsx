@@ -1,8 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/app/actions/auth";
-import { getSectorPreferences } from "@/app/actions/preferences";
+import { getSectorPreferences, getWatchlist } from "@/app/actions/preferences";
 import PushToggle from "@/components/push/PushToggle";
 import SectorPreferences from "@/components/settings/SectorPreferences";
+import WatchlistManager from "@/components/watchlist/WatchlistManager";
 
 export const metadata = {
   title: "설정",
@@ -25,7 +26,10 @@ export default async function SettingsPage() {
     );
   }
 
-  const sectorPrefs = await getSectorPreferences();
+  const [sectorPrefs, watchlist] = await Promise.all([
+    getSectorPreferences(),
+    getWatchlist(),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -37,6 +41,17 @@ export default async function SettingsPage() {
           관심 섹터
         </h3>
         <SectorPreferences initialSectors={sectorPrefs} />
+      </div>
+
+      {/* Watchlist */}
+      <div className="space-y-2">
+        <h3 className="text-sm font-semibold text-[var(--color-muted)]">
+          관심종목 설정
+        </h3>
+        <p className="text-xs text-[var(--color-muted)]">
+          브리핑에서 맞춤 분석을 받을 종목을 선택하세요 (최대 20개)
+        </p>
+        <WatchlistManager initialWatchlist={watchlist} />
       </div>
 
       {/* Push notifications */}
