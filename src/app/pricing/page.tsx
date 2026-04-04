@@ -6,6 +6,7 @@ import { getUserSubscription } from "@/lib/subscription";
 export const metadata: Metadata = {
   title: "요금제",
   description: "새벽시장 Pro 구독으로 심층 리포트와 실시간 알림을 받아보세요.",
+  alternates: { canonical: "/pricing" },
 };
 
 const FEATURES = [

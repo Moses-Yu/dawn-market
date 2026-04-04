@@ -209,6 +209,7 @@ export async function generateMetadata({ params }: { params: Promise<{ sectorId:
   return {
     title: `${config.label} 섹터 딥다이브`,
     description: config.description,
+    alternates: { canonical: `/sectors/${sectorId}` },
   };
 }
 

@@ -13,6 +13,7 @@ export const metadata = {
   title: "용어 사전",
   description:
     "초보 투자자를 위한 주식·경제 용어 사전. 반도체, 방산, AI, 2차전지 핵심 용어를 쉽게 배워보세요.",
+  alternates: { canonical: "/glossary" },
   openGraph: {
     title: "용어 사전 — 새벽시장",
     description:

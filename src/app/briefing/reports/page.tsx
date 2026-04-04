@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   title: "AI 심층 리포트",
   description:
     "10개 섹터별 AI 심층 분석 리포트. 미국 시장, 반도체, 방산, AI 인프라, 2차전지, 환율, 기술적 분석까지.",
+  alternates: { canonical: "/briefing/reports" },
   openGraph: {
     title: "AI 심층 리포트 — 새벽시장",
     description:

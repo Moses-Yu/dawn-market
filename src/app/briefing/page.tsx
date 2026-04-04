@@ -61,6 +61,7 @@ export async function generateMetadata({
   return {
     title: `${dateLabel} 시장 브리핑`,
     description: summary,
+    alternates: { canonical: "/briefing" },
     openGraph: {
       title: `${dateLabel} 새벽시장 브리핑`,
       description: summary,

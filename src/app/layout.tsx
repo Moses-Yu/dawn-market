@@ -7,13 +7,20 @@ import AnalyticsProvider from "@/components/AnalyticsProvider";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import "./globals.css";
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://dawn-market.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "새벽시장 - Dawn Market",
     template: "%s | 새벽시장",
   },
   description:
     "한국 초보 투자자를 위한 해외 시장 브리핑 & AI 인사이트. 매일 새벽, 밤사이 해외 시장 뉴스를 한눈에.",
+  alternates: {
+    canonical: "/",
+  },
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "브리핑 아카이브",
   description:
     "새벽시장 AI 시장 브리핑 아카이브. 날짜별로 과거 브리핑을 확인하고 시장 흐름을 파악하세요.",
+  alternates: { canonical: "/briefing/archive" },
   openGraph: {
     title: "새벽시장 브리핑 아카이브",
     description: "날짜별 AI 시장 브리핑 모아보기",
