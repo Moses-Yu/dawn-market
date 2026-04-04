@@ -191,6 +191,14 @@ function SectorCard({
           </span>
         ))}
       </div>
+
+      {/* Deep dive link */}
+      <Link
+        href={`/sectors/${type}`}
+        className="block text-center text-xs text-[var(--color-primary)] hover:underline pt-1"
+      >
+        딥다이브 보기 →
+      </Link>
     </div>
   );
 }
@@ -259,10 +267,10 @@ export default async function SectorsPage() {
                     </p>
                     <DirectionArrow prediction={report.content.prediction} />
                     <Link
-                      href="/pricing"
+                      href={`/sectors/${type}`}
                       className="mt-2 block text-center text-xs text-[var(--color-primary)] hover:underline"
                     >
-                      Pro 구독으로 상세 분석 보기 →
+                      딥다이브 보기 →
                     </Link>
                   </div>
                 );
