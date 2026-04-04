@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import SeverityBadge from "@/components/briefing/SeverityBadge";
 import CategoryBadge from "@/components/briefing/CategoryBadge";
 import SentimentBadge from "@/components/briefing/SentimentBadge";

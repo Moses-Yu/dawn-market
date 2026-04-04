@@ -14,8 +14,12 @@ function formatDate(dateStr: string): string {
 }
 
 function formatTime(isoStr: string): string {
-  const d = new Date(isoStr);
-  return `${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
+  return new Date(isoStr).toLocaleTimeString("ko-KR", {
+    timeZone: "Asia/Seoul",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
 }
 
 const SECTOR_CONFIG: Record<string, { label: string; icon: string }> = {
@@ -103,9 +107,6 @@ export default async function Home() {
 
   // Use dawn-briefing keyTakeaways as top highlights
   const highlights = dawnBriefing?.content.keyTakeaways ?? [];
-
-  // Use dawn-briefing sections as news-like items
-  const briefingSections = dawnBriefing?.content.sections ?? [];
 
   return (
     <div className="space-y-6">
