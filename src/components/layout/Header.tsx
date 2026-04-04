@@ -23,7 +23,6 @@ export default async function Header() {
               Pro 업그레이드
             </Link>
           )}
-          <span className="text-xs text-[var(--color-muted)]">Dawn Market</span>
         </div>
       </div>
     </header>

@@ -266,17 +266,19 @@ export default function OnboardingPage() {
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-lg flex-col">
-      <div className="flex items-center justify-between px-6 pt-6">
-        <StepIndicator current={step} total={3} />
-        {step > 0 && (
+      <div className="flex items-center px-6 pt-6">
+        {step > 0 ? (
           <button
             type="button"
             onClick={() => setStep((s) => s - 1)}
-            className="text-xs text-[var(--color-muted)]"
+            className="mr-3 text-xs text-[var(--color-muted)]"
           >
-            이전
+            ← 이전
           </button>
+        ) : (
+          <div className="mr-3 w-[34px]" />
         )}
+        <StepIndicator current={step} total={3} />
       </div>
 
       {step === 0 && (

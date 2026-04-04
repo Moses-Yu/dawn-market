@@ -75,6 +75,7 @@ export default async function AlertsPage() {
 
       {alerts.length === 0 ? (
         <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 text-center">
+          <div className="mb-3 text-3xl">🔔</div>
           <p className="text-[var(--color-muted)] text-sm">
             아직 알림이 없습니다.
           </p>
@@ -85,18 +86,22 @@ export default async function AlertsPage() {
       ) : (
         <>
           {/* Regular alerts — visible to all */}
-          <div className="space-y-3">
-            {alerts
-              .filter((a) => a.severity !== "긴급")
-              .map((alert) => (
-                <AlertCard key={alert.id} alert={alert} />
-              ))}
-          </div>
+          {alerts.some((a) => a.severity !== "긴급") && (
+            <div className="space-y-3">
+              <h3 className="flex items-center gap-2 text-sm font-bold text-[var(--color-muted)]">
+                <span className="h-3 w-0.5 rounded-full bg-[var(--color-primary)]" />
+                일반 알림
+              </h3>
+              {alerts
+                .filter((a) => a.severity !== "긴급")
+                .map((alert) => (
+                  <AlertCard key={alert.id} alert={alert} />
+                ))}
+            </div>
+          )}
 
           {/* Critical/urgent alerts — Pro only */}
-          {alerts.some(
-            (a) => a.severity === "긴급"
-          ) && (
+          {alerts.some((a) => a.severity === "긴급") && (
             <div className="space-y-3">
               <h3 className="flex items-center gap-2 text-sm font-bold text-[var(--color-muted)]">
                 <span className="h-3 w-0.5 rounded-full bg-red-400" />
@@ -105,10 +110,7 @@ export default async function AlertsPage() {
               <PaywallGate requiredTier="pro">
                 <div className="space-y-3">
                   {alerts
-                    .filter(
-                      (a) =>
-                        a.severity === "긴급"
-                    )
+                    .filter((a) => a.severity === "긴급")
                     .map((alert) => (
                       <AlertCard key={alert.id} alert={alert} />
                     ))}

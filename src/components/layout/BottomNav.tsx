@@ -30,13 +30,21 @@ export default function BottomNav() {
                   : "text-[var(--color-muted)] hover:text-[var(--color-foreground)]"
               }`}
             >
-              <item.icon
-                className={`h-5 w-5 ${
+              <span
+                className={`flex items-center justify-center rounded-full px-3 py-1 transition-colors ${
                   isActive
-                    ? "text-[var(--color-primary)]"
-                    : "text-[var(--color-muted)] group-hover:text-[var(--color-foreground)]"
+                    ? "bg-[var(--color-primary)]/15"
+                    : "bg-transparent group-hover:bg-white/5"
                 }`}
-              />
+              >
+                <item.icon
+                  className={`h-5 w-5 ${
+                    isActive
+                      ? "text-[var(--color-primary)]"
+                      : "text-[var(--color-muted)] group-hover:text-[var(--color-foreground)]"
+                  }`}
+                />
+              </span>
               <span>{item.label}</span>
             </Link>
           );

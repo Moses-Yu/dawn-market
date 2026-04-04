@@ -227,7 +227,7 @@ export default async function Home() {
                   return (
                     <Link
                       key={type}
-                      href="/sectors"
+                      href={`/sectors/${type}`}
                       className="flex items-center gap-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3 transition-colors hover:bg-[var(--color-surface-hover)]"
                     >
                       <span className="text-lg">{config.icon}</span>
