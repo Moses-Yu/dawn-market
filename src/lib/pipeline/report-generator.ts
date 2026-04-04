@@ -12,6 +12,7 @@ import {
   CURRENCY_SYMBOLS,
   COMMODITY_SYMBOLS,
   COMMODITY_KR_IMPACT,
+  KOSPI_FUTURES_SYMBOLS,
 } from "./reports/types";
 import { filterMarketData } from "./reports/data-collector";
 import type { CollectedData } from "./reports/data-collector";
@@ -29,7 +30,7 @@ const CORE_REPORT_TYPES: ReportType[] = [
 ];
 
 const SYMBOL_MAP: Record<string, { symbol: string; name: string }[]> = {
-  "us-market": [...US_MARKET_SYMBOLS, ...COMMODITY_SYMBOLS],
+  "us-market": [...US_MARKET_SYMBOLS, ...COMMODITY_SYMBOLS, ...KOSPI_FUTURES_SYMBOLS],
   semiconductor: SEMICONDUCTOR_SYMBOLS,
   "shipbuilding-defense": SHIPBUILDING_DEFENSE_SYMBOLS,
   "ai-infra": AI_INFRA_SYMBOLS,
@@ -84,6 +85,21 @@ ${COMMODITY_SYMBOLS.map((c) => {
 dataPoints에 각 원자재의 가격/변동/sentiment를 반드시 포함하세요.`
       : "";
 
+  // KOSPI futures overnight context for us-market report
+  const kospiFuturesContext =
+    reportType === "us-market"
+      ? `\n\n## 야간 선물 동향 (반드시 섹션에 포함)
+KOSPI200 선물(KM=F) 야간 마감 데이터를 "야간 선물 동향" 섹션으로 반드시 포함하세요.
+이 섹션은 초보자에게 오전 시장 방향성 힌트를 제공하기 위한 것입니다.
+
+작성 방식:
+- 예시: "야간 선물이 -1.2%로 마감 → 오전 약세 출발 가능"
+- 선물 매매를 유도하는 것이 아님을 명확히 할 것
+- "선물(미래 가격을 미리 거래하는 시장)"처럼 초보자를 위한 용어 설명 포함
+- 교육 맥락으로 제공: 왜 선물 동향이 다음날 시장 방향의 힌트가 되는지 간단히 설명
+- dataPoints에 KOSPI200 선물의 가격/변동/sentiment를 반드시 포함`
+      : "";
+
   return `당신은 한국 초보 투자자를 위한 시장 분석가입니다.
 새벽시장(Dawn Market) 플랫폼에서 매일 아침 전달되는 "${REPORT_TITLES[reportType]}" 리포트를 작성하세요.
 
@@ -105,6 +121,7 @@ ${marketSummary || "(관련 시장 데이터 없음)"}
 ${articleSummary || "(관련 뉴스 없음)"}
 ${prevContext}
 ${commodityContext}
+${kospiFuturesContext}
 
 ## 출력 형식 (JSON)
 아래 JSON 구조를 **정확히** 따르세요. JSON만 출력하고, 다른 텍스트는 포함하지 마세요.

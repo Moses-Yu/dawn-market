@@ -187,9 +187,14 @@ export const FINANCE_SYMBOLS = [
   { symbol: "USDKRW=X", name: "달러/원" },
 ];
 
+export const KOSPI_FUTURES_SYMBOLS = [
+  { symbol: "KM=F", name: "KOSPI200 선물" },
+];
+
 export const ASIAN_SYMBOLS = [
   { symbol: "^KS11", name: "KOSPI" },
   { symbol: "^KQ11", name: "KOSDAQ" },
+  ...KOSPI_FUTURES_SYMBOLS,
   { symbol: "^N225", name: "Nikkei 225" },
   { symbol: "^HSI", name: "Hang Seng" },
   { symbol: "000300.SS", name: "CSI 300" },
