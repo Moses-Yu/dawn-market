@@ -29,7 +29,8 @@ body {
   background: var(--color-background);
   color: var(--color-foreground);
   font-family:
-    var(--font-pretendard),
+    "Pretendard Variable",
+    Pretendard,
     -apple-system,
     BlinkMacSystemFont,
     system-ui,
