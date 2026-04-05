@@ -62,23 +62,31 @@ export async function POST(request: Request) {
       orderName: "새벽시장 Pro 월간 구독",
     });
 
+    const serviceClient = getServiceRoleClient();
+    const { error: historyError } = await serviceClient
+      .from("payment_history")
+      .insert({
+        user_id: user.id,
+        subscription_id: sub.id,
+        toss_payment_key: payment.paymentKey,
+        amount: PRO_PRICE,
+        currency: "KRW",
+        status: "paid",
+        paid_at: payment.approvedAt,
+      });
+
+    if (historyError) {
+      throw new Error(
+        `payment_history insert failed: ${historyError.message}`
+      );
+    }
+
     await upsertSubscription(user.id, {
       tier: "pro",
       status: "active",
       current_period_start: now.toISOString(),
       current_period_end: periodEnd.toISOString(),
       cancelled_at: null,
-    });
-
-    const serviceClient = getServiceRoleClient();
-    await serviceClient.from("payment_history").insert({
-      user_id: user.id,
-      subscription_id: sub.id,
-      toss_payment_key: payment.paymentKey,
-      amount: PRO_PRICE,
-      currency: "KRW",
-      status: "paid",
-      paid_at: payment.approvedAt,
     });
 
     return NextResponse.json({
