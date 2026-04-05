@@ -4,6 +4,8 @@ import Link from "next/link";
 import { getLatestReportSet } from "@/lib/pipeline/reports";
 import type { ReportType, MarketPrediction, DataPoint } from "@/lib/pipeline/reports";
 import PaywallGate from "@/components/PaywallGate";
+import PageTransition from "@/components/PageTransition";
+import { StaggerContainer, StaggerItem } from "@/components/StaggerList";
 
 
 const SECTOR_CONFIG: Record<
@@ -239,6 +241,7 @@ export default async function SectorsPage() {
     : [];
 
   return (
+    <PageTransition>
     <div className="space-y-4">
       <div>
         <h2 className="text-xl font-bold">섹터 영향도</h2>
@@ -253,7 +256,7 @@ export default async function SectorsPage() {
         <PaywallGate
           requiredTier="pro"
           fallback={
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <StaggerContainer className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {sectorReports.map((item) => {
                 if (!item) return null;
                 const { type, report } = item;
@@ -261,8 +264,8 @@ export default async function SectorsPage() {
                 if (!config) return null;
                 const risk = getRiskLevel(report.content.prediction);
                 return (
+                  <StaggerItem key={type}>
                   <div
-                    key={type}
                     className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 space-y-2"
                   >
                     <div className="flex items-start justify-between">
@@ -287,12 +290,13 @@ export default async function SectorsPage() {
                       딥다이브 보기 →
                     </Link>
                   </div>
+                  </StaggerItem>
                 );
               })}
-            </div>
+            </StaggerContainer>
           }
         >
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <StaggerContainer className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {sectorReports.map((item) => {
               if (!item) return null;
               const { type, report } = item;
@@ -300,17 +304,18 @@ export default async function SectorsPage() {
                 (s) => s.dataPoints ?? []
               );
               return (
-                <SectorCard
-                  key={type}
-                  type={type}
-                  headline={report.content.headline}
-                  prediction={report.content.prediction}
-                  keyTakeaways={report.content.keyTakeaways}
-                  dataPoints={allDataPoints}
-                />
+                <StaggerItem key={type}>
+                  <SectorCard
+                    type={type}
+                    headline={report.content.headline}
+                    prediction={report.content.prediction}
+                    keyTakeaways={report.content.keyTakeaways}
+                    dataPoints={allDataPoints}
+                  />
+                </StaggerItem>
               );
             })}
-          </div>
+          </StaggerContainer>
         </PaywallGate>
       ) : (
         <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 text-center">
@@ -334,5 +339,6 @@ export default async function SectorsPage() {
         </Link>
       )}
     </div>
+    </PageTransition>
   );
 }

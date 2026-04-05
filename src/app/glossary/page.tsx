@@ -7,6 +7,7 @@ import {
 } from "@/lib/glossary/terms";
 import type { Category } from "@/lib/pipeline/types";
 import { createClient } from "@/lib/supabase/server";
+import PageTransition from "@/components/PageTransition";
 import GlossaryClient from "./GlossaryClient";
 
 export const metadata = {
@@ -46,18 +47,20 @@ export default async function GlossaryPage() {
   const terms = await getTerms();
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h2 className="text-xl font-bold">용어 사전</h2>
-        <p className="mt-1 text-sm text-[var(--color-muted)]">
-          초보 투자자를 위한 핵심 용어 {terms.length}개
-        </p>
+    <PageTransition>
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-xl font-bold">용어 사전</h2>
+          <p className="mt-1 text-sm text-[var(--color-muted)]">
+            초보 투자자를 위한 핵심 용어 {terms.length}개
+          </p>
+        </div>
+        <GlossaryClient
+          terms={terms}
+          categoryLabels={CATEGORY_LABELS}
+          difficultyLabels={DIFFICULTY_LABELS}
+        />
       </div>
-      <GlossaryClient
-        terms={terms}
-        categoryLabels={CATEGORY_LABELS}
-        difficultyLabels={DIFFICULTY_LABELS}
-      />
-    </div>
+    </PageTransition>
   );
 }
