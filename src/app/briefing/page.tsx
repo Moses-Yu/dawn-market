@@ -20,6 +20,7 @@ import PersonalizedBriefing from "@/components/briefing/PersonalizedBriefing";
 import WatchlistUpsellBanner from "@/components/briefing/WatchlistUpsellBanner";
 import PageTransition from "@/components/PageTransition";
 import { StaggerContainer, StaggerItem } from "@/components/StaggerList";
+import { TrackReportView } from "@/components/TrackEvent";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -288,6 +289,7 @@ function BriefingContent({ reportSet }: { reportSet: ReportSet }) {
   return (
     <PageTransition>
       <StaggerContainer className="space-y-6">
+        <TrackReportView reportType="dawn_briefing" date={reportSet.date} />
         <BriefingJsonLd reportSet={reportSet} headline={headline} />
 
         {/* Header */}

@@ -2,6 +2,7 @@
 
 import { Bell, BellOff } from "lucide-react";
 import { usePush } from "@/lib/push/use-push";
+import { trackNotificationAction } from "@/lib/analytics";
 
 export default function PushToggle() {
   const { state, isProcessing, subscribe, unsubscribe } = usePush();
@@ -70,7 +71,10 @@ export default function PushToggle() {
         </div>
       </div>
       <button
-        onClick={isSubscribed ? unsubscribe : subscribe}
+        onClick={() => {
+          trackNotificationAction(isSubscribed ? "toggle_unsubscribe" : "toggle_subscribe");
+          (isSubscribed ? unsubscribe : subscribe)();
+        }}
         disabled={isProcessing}
         className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-50 ${
           isSubscribed

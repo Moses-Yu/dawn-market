@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { CreditCard, Loader2 } from "lucide-react";
+import { trackSubscriptionAction } from "@/lib/analytics";
 
 export default function SubscribePage() {
   const router = useRouter();
@@ -11,6 +12,8 @@ export default function SubscribePage() {
   const [step, setStep] = useState<"card" | "confirm">("card");
 
   useEffect(() => {
+    trackSubscriptionAction("page_view", "pro");
+
     const script = document.createElement("script");
     script.src = "https://js.tosspayments.com/v2/standard";
     script.async = true;
@@ -23,6 +26,7 @@ export default function SubscribePage() {
   async function handleCardRegister() {
     setLoading(true);
     setError(null);
+    trackSubscriptionAction("card_register_start", "pro");
 
     try {
       const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
@@ -54,8 +58,10 @@ export default function SubscribePage() {
         }
 
         setStep("confirm");
+        trackSubscriptionAction("card_register_success", "pro");
       }
     } catch (err) {
+      trackSubscriptionAction("card_register_fail", "pro");
       setError(err instanceof Error ? err.message : "카드 등록에 실패했습니다.");
     } finally {
       setLoading(false);
@@ -65,6 +71,7 @@ export default function SubscribePage() {
   async function handleSubscribe() {
     setLoading(true);
     setError(null);
+    trackSubscriptionAction("subscribe_start", "pro");
 
     try {
       const res = await fetch("/api/payments/subscribe", {
@@ -78,8 +85,10 @@ export default function SubscribePage() {
         throw new Error(data.error ?? "구독 실패");
       }
 
+      trackSubscriptionAction("subscribe_success", "pro");
       router.push("/settings/subscription?subscribed=true");
     } catch (err) {
+      trackSubscriptionAction("subscribe_fail", "pro");
       setError(err instanceof Error ? err.message : "구독에 실패했습니다.");
     } finally {
       setLoading(false);

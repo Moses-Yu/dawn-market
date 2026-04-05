@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { trackClick } from "@/lib/analytics";
 
 interface ShareButtonProps {
   date: string;
@@ -32,6 +33,7 @@ export default function ShareButton({
   }
 
   async function handleCopyLink() {
+    trackClick("share_copy_link", { date });
     try {
       await navigator.clipboard.writeText(getUrl());
       setCopied(true);
@@ -43,6 +45,7 @@ export default function ShareButton({
   }
 
   async function handleCopyText() {
+    trackClick("share_copy_text", { date });
     try {
       await navigator.clipboard.writeText(getShareText());
       setCopied(true);
@@ -54,6 +57,7 @@ export default function ShareButton({
   }
 
   async function handleNativeShare() {
+    trackClick("share_native", { date });
     const url = getUrl();
     if (navigator.share) {
       try {
@@ -72,6 +76,7 @@ export default function ShareButton({
   }
 
   function handleTwitter() {
+    trackClick("share_twitter", { date });
     const url = getUrl();
     const text = encodeURIComponent(
       title || `새벽시장 브리핑 ${date} - 오늘의 해외 시장 분석`

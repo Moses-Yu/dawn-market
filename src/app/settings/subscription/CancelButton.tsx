@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { trackSubscriptionAction } from "@/lib/analytics";
 
 export default function CancelButton() {
   const router = useRouter();
@@ -10,6 +11,7 @@ export default function CancelButton() {
 
   async function handleCancel() {
     setLoading(true);
+    trackSubscriptionAction("cancel_confirm", "pro");
     try {
       const res = await fetch("/api/payments/cancel", { method: "POST" });
       if (!res.ok) {

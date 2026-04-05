@@ -6,6 +6,7 @@ import type { ReportType, MarketPrediction, DataPoint } from "@/lib/pipeline/rep
 import PaywallGate from "@/components/PaywallGate";
 import PageTransition from "@/components/PageTransition";
 import { StaggerContainer, StaggerItem } from "@/components/StaggerList";
+import TrackEvent from "@/components/TrackEvent";
 
 
 const SECTOR_CONFIG: Record<
@@ -243,6 +244,7 @@ export default async function SectorsPage() {
   return (
     <PageTransition>
     <div className="space-y-4">
+      <TrackEvent name="report_view" category="engagement" properties={{ report_type: "sectors_overview" }} />
       <div>
         <h2 className="text-xl font-bold">섹터 영향도</h2>
         <p className="text-sm text-[var(--color-muted)] mt-1">

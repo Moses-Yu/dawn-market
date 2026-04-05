@@ -7,6 +7,7 @@ import type { ReportType, MarketPrediction, DataPoint, ReportSection } from "@/l
 import PaywallGate from "@/components/PaywallGate";
 import PageTransition from "@/components/PageTransition";
 import { StaggerContainer, StaggerItem } from "@/components/StaggerList";
+import TrackEvent from "@/components/TrackEvent";
 
 const SECTOR_CONFIG: Record<
   string,
@@ -274,6 +275,8 @@ export default async function SectorDeepDivePage({ params }: { params: Promise<{
   return (
     <PageTransition>
     <div className="space-y-4">
+      <TrackEvent name="report_view" category="engagement" properties={{ report_type: "sector_deepdive", sector: sectorId }} />
+
       {/* Back navigation */}
       <Link href="/sectors" className="inline-flex items-center gap-1 text-sm text-[var(--color-primary)] hover:underline">
         <ArrowLeft className="h-4 w-4" /> 섹터 목록

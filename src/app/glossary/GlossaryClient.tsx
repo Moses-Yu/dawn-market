@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import type { GlossaryTerm, Difficulty } from "@/lib/glossary/terms";
 import type { Category } from "@/lib/pipeline/types";
 import { Search, X, BookOpen } from "lucide-react";
+import { trackClick } from "@/lib/analytics";
 
 const CATEGORY_COLORS: Record<Category, string> = {
   semiconductor: "bg-blue-500/15 text-blue-400",
@@ -162,9 +163,13 @@ export default function GlossaryClient({
               categoryLabels={categoryLabels}
               difficultyLabels={difficultyLabels}
               expanded={expandedId === term.id}
-              onToggle={() =>
-                setExpandedId(expandedId === term.id ? null : term.id)
-              }
+              onToggle={() => {
+                const opening = expandedId !== term.id;
+                setExpandedId(opening ? term.id : null);
+                if (opening) {
+                  trackClick("glossary_term_expand", { term_id: term.id, term_ko: term.termKo });
+                }
+              }}
             />
           ))
         )}

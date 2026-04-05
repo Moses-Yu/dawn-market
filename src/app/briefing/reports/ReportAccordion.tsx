@@ -1,17 +1,20 @@
 "use client";
 
 import { useState, useRef, useEffect, type ReactNode } from "react";
+import { trackReportView } from "@/lib/analytics";
 
 function AccordionItem({
   isOpen,
   onToggle,
   header,
   children,
+  reportKey,
 }: {
   isOpen: boolean;
   onToggle: () => void;
   header: ReactNode;
   children: ReactNode;
+  reportKey?: string;
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number>(0);
@@ -62,14 +65,23 @@ export default function ReportAccordion({
 }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
+  function handleToggle(index: number, key: string) {
+    const opening = openIndex !== index;
+    setOpenIndex(opening ? index : null);
+    if (opening) {
+      trackReportView("sector_report", key);
+    }
+  }
+
   return (
     <div className="space-y-2">
       {items.map((item, i) => (
         <AccordionItem
           key={item.key}
           isOpen={openIndex === i}
-          onToggle={() => setOpenIndex(openIndex === i ? null : i)}
+          onToggle={() => handleToggle(i, item.key)}
           header={item.header}
+          reportKey={item.key}
         >
           {item.content}
         </AccordionItem>

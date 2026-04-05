@@ -68,18 +68,34 @@ self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
   const targetUrl = event.notification.data?.url || "/";
+  const tag = event.notification.tag || "unknown";
 
+  // Track notification click
   event.waitUntil(
-    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
-      // Focus an existing tab if possible
-      for (const client of clients) {
-        if (client.url.includes(self.location.origin) && "focus" in client) {
-          client.navigate(targetUrl);
-          return client.focus();
+    Promise.all([
+      fetch("/api/analytics/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          session_id: "sw",
+          events: [{
+            event_name: "notification_click",
+            event_category: "notification",
+            page_path: targetUrl,
+            properties: { tag, action: event.action || "default" },
+          }],
+        }),
+        keepalive: true,
+      }).catch(() => {}),
+      self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
+        for (const client of clients) {
+          if (client.url.includes(self.location.origin) && "focus" in client) {
+            client.navigate(targetUrl);
+            return client.focus();
+          }
         }
-      }
-      // Open a new window
-      return self.clients.openWindow(targetUrl);
-    })
+        return self.clients.openWindow(targetUrl);
+      }),
+    ])
   );
 });

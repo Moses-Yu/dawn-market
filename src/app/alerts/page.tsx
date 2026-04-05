@@ -6,6 +6,7 @@ import SentimentBadge from "@/components/briefing/SentimentBadge";
 import PaywallGate from "@/components/PaywallGate";
 import PageTransition from "@/components/PageTransition";
 import { StaggerContainer, StaggerItem } from "@/components/StaggerList";
+import TrackEvent from "@/components/TrackEvent";
 import type { Alert } from "@/lib/pipeline/alert-engine";
 import type { Severity } from "@/lib/pipeline/types";
 import type { Category } from "@/lib/pipeline/types";
@@ -68,6 +69,7 @@ export default async function AlertsPage() {
 
   return (
     <PageTransition>
+      <TrackEvent name="alerts_page_view" category="navigation" />
       <div className="space-y-4">
         <div>
           <h2 className="text-xl font-bold">알림</h2>

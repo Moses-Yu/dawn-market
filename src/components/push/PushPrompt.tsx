@@ -3,6 +3,7 @@
 import { Bell, BellOff, BellRing, X } from "lucide-react";
 import { useState } from "react";
 import { usePush, type PushState } from "@/lib/push/use-push";
+import { trackNotificationAction } from "@/lib/analytics";
 
 function PromptContent({
   onSubscribe,
@@ -61,10 +62,20 @@ export default function PushPrompt() {
   // Don't show if already subscribed, denied, unsupported, loading, or dismissed
   if (state !== "prompt" || dismissed) return null;
 
+  function handleSubscribe() {
+    trackNotificationAction("prompt_subscribe");
+    subscribe();
+  }
+
+  function handleDismiss() {
+    trackNotificationAction("prompt_dismiss");
+    setDismissed(true);
+  }
+
   return (
     <PromptContent
-      onSubscribe={subscribe}
-      onDismiss={() => setDismissed(true)}
+      onSubscribe={handleSubscribe}
+      onDismiss={handleDismiss}
       isProcessing={isProcessing}
     />
   );

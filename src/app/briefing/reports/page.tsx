@@ -15,6 +15,7 @@ import type {
 } from "@/lib/pipeline/reports";
 import PaywallGate from "@/components/PaywallGate";
 import PageTransition from "@/components/PageTransition";
+import { TrackReportView } from "@/components/TrackEvent";
 import ReportDateNav from "./ReportDateNav";
 import ReportAccordion from "./ReportAccordion";
 
@@ -384,6 +385,9 @@ export default async function ReportsPage({
           </div>
         </div>
       )}
+
+      {/* Track report page view */}
+      {reportSet && <TrackReportView reportType="reports_page" date={reportSet.date} />}
 
       {/* Reports or empty state */}
       {reportSet ? <ReportSetView reportSet={reportSet} /> : <EmptyState />}
