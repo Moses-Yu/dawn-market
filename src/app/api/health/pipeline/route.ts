@@ -12,6 +12,9 @@ const REPORT_TYPES = [
   "bio-healthcare",
   "finance",
   "geopolitical",
+  "currency",
+  "asian-premarket",
+  "technical",
   "dawn-briefing",
 ];
 
@@ -45,7 +48,7 @@ export async function GET(request: Request) {
 
     // Check today's reports
     const { data: todayReports, error: todayErr } = await supabase
-      .from("reports")
+      .from("dawn_reports")
       .select("report_type, created_at")
       .eq("date", today);
 
@@ -53,7 +56,7 @@ export async function GET(request: Request) {
 
     // Check yesterday's reports for comparison
     const { data: yesterdayReports, error: yesterdayErr } = await supabase
-      .from("reports")
+      .from("dawn_reports")
       .select("report_type, created_at")
       .eq("date", yesterday);
 

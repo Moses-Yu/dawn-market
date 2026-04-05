@@ -6,7 +6,7 @@ import { generateAllReports } from "@/lib/pipeline/report-generator";
 import { checkBatchQuality } from "@/lib/pipeline/quality-checker";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 300; // 5 minutes for full pipeline
+export const maxDuration = 300; // 5 minutes for full pipeline (12 reports)
 
 /**
  * GET /api/cron/daily-reports
@@ -14,7 +14,7 @@ export const maxDuration = 300; // 5 minutes for full pipeline
  * Vercel Cron endpoint — runs daily at KST 06:00 (UTC 21:00).
  * Orchestrates the full content pipeline:
  *   1. Collect market data + news
- *   2. Generate 7 sector reports via Claude API
+ *   2. Generate 12 reports via Claude API
  *   3. Validate quality
  *   4. Store in Supabase
  *   5. Log failures
