@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, FileText, BarChart3, Bell, Settings } from "lucide-react";
+import { Home, FileText, BarChart3, Bell, BookOpen } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
 const navItems = [
@@ -10,7 +10,7 @@ const navItems = [
   { href: "/briefing", label: "브리핑", icon: FileText },
   { href: "/sectors", label: "섹터", icon: BarChart3 },
   { href: "/alerts", label: "알림", icon: Bell },
-  { href: "/settings", label: "설정", icon: Settings },
+  { href: "/glossary", label: "용어사전", icon: BookOpen },
 ];
 
 const navSpring = { stiffness: 400, damping: 35 };

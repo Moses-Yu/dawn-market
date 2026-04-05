@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Settings } from "lucide-react";
 import { getUserSubscription } from "@/lib/subscription";
 
 export default async function Header() {
@@ -23,6 +24,13 @@ export default async function Header() {
               Pro 업그레이드
             </Link>
           )}
+          <Link
+            href="/settings"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--color-muted)] transition hover:bg-white/10 hover:text-[var(--color-foreground)]"
+            aria-label="설정"
+          >
+            <Settings className="h-4.5 w-4.5" />
+          </Link>
         </div>
       </div>
     </header>
