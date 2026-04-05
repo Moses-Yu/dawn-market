@@ -14,6 +14,7 @@ import type {
   ReportType,
 } from "@/lib/pipeline/reports";
 import PaywallGate from "@/components/PaywallGate";
+import PageTransition from "@/components/PageTransition";
 import ReportDateNav from "./ReportDateNav";
 import ReportAccordion from "./ReportAccordion";
 
@@ -344,6 +345,7 @@ export default async function ReportsPage({
   const currentDate = reportSet?.date ?? (typeof date === "string" ? date : null);
 
   return (
+    <PageTransition>
     <div className="space-y-4">
       {/* Header */}
       <div>
@@ -392,5 +394,6 @@ export default async function ReportsPage({
         결정은 본인의 판단과 책임 하에 이루어져야 합니다.
       </div>
     </div>
+    </PageTransition>
   );
 }

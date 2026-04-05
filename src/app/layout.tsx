@@ -5,6 +5,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import ClientErrorReporter from "@/components/ClientErrorReporter";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import LazyFeedbackWidget from "@/components/LazyFeedbackWidget";
+import AnimatedLayout from "@/components/AnimatedLayout";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 
@@ -71,7 +72,9 @@ export default function RootLayout({
         <ErrorBoundary>
           <div className="mx-auto flex min-h-dvh max-w-lg flex-col">
             <Header />
-            <main className="flex-1 px-4 py-4 pb-20">{children}</main>
+            <main className="flex-1 px-4 py-4 pb-20">
+              <AnimatedLayout>{children}</AnimatedLayout>
+            </main>
             <BottomNav />
           </div>
           <LazyFeedbackWidget />

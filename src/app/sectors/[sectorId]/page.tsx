@@ -5,6 +5,8 @@ import { ArrowLeft, TrendingUp, TrendingDown, Minus, BarChart3, Newspaper, Activ
 import { getLatestReportSet } from "@/lib/pipeline/reports";
 import type { ReportType, MarketPrediction, DataPoint, ReportSection } from "@/lib/pipeline/reports";
 import PaywallGate from "@/components/PaywallGate";
+import PageTransition from "@/components/PageTransition";
+import { StaggerContainer, StaggerItem } from "@/components/StaggerList";
 
 const SECTOR_CONFIG: Record<
   string,
@@ -270,6 +272,7 @@ export default async function SectorDeepDivePage({ params }: { params: Promise<{
   const report = reportSet?.reports.find((r) => r.reportType === config.reportType) ?? null;
 
   return (
+    <PageTransition>
     <div className="space-y-4">
       {/* Back navigation */}
       <Link href="/sectors" className="inline-flex items-center gap-1 text-sm text-[var(--color-primary)] hover:underline">
@@ -376,16 +379,17 @@ export default async function SectorDeepDivePage({ params }: { params: Promise<{
             {/* Related companies */}
             <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 space-y-2">
               <h3 className="text-sm font-semibold">관련 종목</h3>
-              <div className="flex flex-wrap gap-2">
+              <StaggerContainer className="flex flex-wrap gap-2">
                 {config.companies.map((c) => (
-                  <span
-                    key={c}
-                    className="rounded-full bg-white/5 border border-[var(--color-border)] px-3 py-1 text-xs text-[var(--color-muted)]"
-                  >
-                    {c}
-                  </span>
+                  <StaggerItem key={c}>
+                    <span
+                      className="rounded-full bg-white/5 border border-[var(--color-border)] px-3 py-1 text-xs text-[var(--color-muted)]"
+                    >
+                      {c}
+                    </span>
+                  </StaggerItem>
                 ))}
-              </div>
+              </StaggerContainer>
             </div>
 
             {/* Link to full report */}
@@ -409,5 +413,6 @@ export default async function SectorDeepDivePage({ params }: { params: Promise<{
         </div>
       )}
     </div>
+    </PageTransition>
   );
 }

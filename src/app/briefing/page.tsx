@@ -18,6 +18,8 @@ import ShareButton from "@/components/briefing/ShareButton";
 import PaywallGate from "@/components/PaywallGate";
 import PersonalizedBriefing from "@/components/briefing/PersonalizedBriefing";
 import WatchlistUpsellBanner from "@/components/briefing/WatchlistUpsellBanner";
+import PageTransition from "@/components/PageTransition";
+import { StaggerContainer, StaggerItem } from "@/components/StaggerList";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -284,127 +286,149 @@ function BriefingContent({ reportSet }: { reportSet: ReportSet }) {
     : [];
 
   return (
-    <div className="space-y-6">
-      <BriefingJsonLd reportSet={reportSet} headline={headline} />
+    <PageTransition>
+      <StaggerContainer className="space-y-6">
+        <BriefingJsonLd reportSet={reportSet} headline={headline} />
 
-      {/* Header */}
-      <div className="mb-6">
-        <p className="text-xs text-[var(--color-muted)]">
-          {new Date(reportSet.date + "T00:00:00").toLocaleDateString("ko-KR", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            weekday: "long",
-          })}
-        </p>
-        <h1 className="mt-0.5 text-2xl font-bold">오늘의 시장 브리핑</h1>
-        <div className="mt-1 text-xs text-[var(--color-muted)]">
-          생성:{" "}
-          {new Date(reportSet.generatedAt).toLocaleTimeString("ko-KR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </div>
-      </div>
-
-      {/* Share */}
-      <ShareButton date={reportSet.date} />
-
-      {/* Headline */}
-      <section>
-        <p className="mb-4 text-sm font-medium leading-relaxed">
-          {headline}
-        </p>
-      </section>
-
-      {/* Market Overview (from us-market report) */}
-      {marketDataPoints.length > 0 && (
-        <section>
-          <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
-            <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
-            시장 개요
-          </h3>
-          <MarketDataSection dataPoints={marketDataPoints} />
-        </section>
-      )}
-
-      {/* Sections */}
-      {sections.length > 0 && (
-        <section>
-          <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
-            <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
-            상세 분석
-          </h3>
-          <div className="space-y-3">
-            {sections.map((s, i) => (
-              <ReportSectionCard key={i} section={s} />
-            ))}
+        {/* Header */}
+        <StaggerItem>
+          <div className="mb-6">
+            <p className="text-xs text-[var(--color-muted)]">
+              {new Date(reportSet.date + "T00:00:00").toLocaleDateString("ko-KR", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                weekday: "long",
+              })}
+            </p>
+            <h1 className="mt-0.5 text-2xl font-bold">오늘의 시장 브리핑</h1>
+            <div className="mt-1 text-xs text-[var(--color-muted)]">
+              생성:{" "}
+              {new Date(reportSet.generatedAt).toLocaleTimeString("ko-KR", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </div>
           </div>
-        </section>
-      )}
+        </StaggerItem>
 
-      {/* Prediction */}
-      {prediction && (
-        <section>
-          <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
-            <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
-            시장 전망
-          </h3>
-          <PredictionCard prediction={prediction} />
-        </section>
-      )}
+        {/* Share */}
+        <StaggerItem>
+          <ShareButton date={reportSet.date} />
+        </StaggerItem>
 
-      {/* Key Takeaways */}
-      {keyTakeaways.length > 0 && (
-        <section>
-          <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
-            <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
-            오늘의 체크포인트
-          </h3>
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-            <ul className="space-y-2">
-              {keyTakeaways.map((item, i) => (
-                <li
-                  key={i}
-                  className="flex items-start gap-2 text-sm leading-relaxed"
-                >
-                  <span className="mt-0.5 text-[var(--color-primary)]">•</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
+        {/* Headline */}
+        <StaggerItem>
+          <section>
+            <p className="mb-4 text-sm font-medium leading-relaxed">
+              {headline}
+            </p>
+          </section>
+        </StaggerItem>
+
+        {/* Market Overview (from us-market report) */}
+        {marketDataPoints.length > 0 && (
+          <StaggerItem>
+            <section>
+              <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
+                <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
+                시장 개요
+              </h3>
+              <MarketDataSection dataPoints={marketDataPoints} />
+            </section>
+          </StaggerItem>
+        )}
+
+        {/* Sections */}
+        {sections.length > 0 && (
+          <StaggerItem>
+            <section>
+              <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
+                <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
+                상세 분석
+              </h3>
+              <div className="space-y-3">
+                {sections.map((s, i) => (
+                  <ReportSectionCard key={i} section={s} />
+                ))}
+              </div>
+            </section>
+          </StaggerItem>
+        )}
+
+        {/* Prediction */}
+        {prediction && (
+          <StaggerItem>
+            <section>
+              <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
+                <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
+                시장 전망
+              </h3>
+              <PredictionCard prediction={prediction} />
+            </section>
+          </StaggerItem>
+        )}
+
+        {/* Key Takeaways */}
+        {keyTakeaways.length > 0 && (
+          <StaggerItem>
+            <section>
+              <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
+                <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
+                오늘의 체크포인트
+              </h3>
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                <ul className="space-y-2">
+                  {keyTakeaways.map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-2 text-sm leading-relaxed"
+                    >
+                      <span className="mt-0.5 text-[var(--color-primary)]">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+          </StaggerItem>
+        )}
+
+        {/* Personalized Watchlist Briefing (Pro) / Upsell Banner (Free) */}
+        <StaggerItem>
+          <PaywallGate fallback={<WatchlistUpsellBanner />}>
+            <PersonalizedBriefing />
+          </PaywallGate>
+        </StaggerItem>
+
+        {/* Disclaimer */}
+        <StaggerItem>
+          <div className="rounded-lg border border-white/5 bg-white/[0.02] p-3 text-xs leading-relaxed text-[var(--color-muted)]">
+            본 브리핑은 AI가 자동 생성한 정보로, 투자 조언이 아닙니다. 투자
+            결정은 본인의 판단과 책임 하에 이루어져야 합니다.
           </div>
-        </section>
-      )}
+        </StaggerItem>
 
-      {/* Personalized Watchlist Briefing (Pro) / Upsell Banner (Free) */}
-      <PaywallGate fallback={<WatchlistUpsellBanner />}>
-        <PersonalizedBriefing />
-      </PaywallGate>
-
-      {/* Disclaimer */}
-      <div className="rounded-lg border border-white/5 bg-white/[0.02] p-3 text-xs leading-relaxed text-[var(--color-muted)]">
-        본 브리핑은 AI가 자동 생성한 정보로, 투자 조언이 아닙니다. 투자
-        결정은 본인의 판단과 책임 하에 이루어져야 합니다.
-      </div>
-
-      {/* Links */}
-      <div className="flex items-center justify-center gap-4">
-        <Link
-          href="/briefing/reports"
-          className="text-sm text-[var(--color-primary)] hover:underline"
-        >
-          AI 심층 리포트
-        </Link>
-        <span className="text-white/20">|</span>
-        <Link
-          href="/briefing/archive"
-          className="text-sm text-[var(--color-primary)] hover:underline"
-        >
-          지난 브리핑 보기
-        </Link>
-      </div>
-    </div>
+        {/* Links */}
+        <StaggerItem>
+          <div className="flex items-center justify-center gap-4">
+            <Link
+              href="/briefing/reports"
+              className="text-sm text-[var(--color-primary)] hover:underline"
+            >
+              AI 심층 리포트
+            </Link>
+            <span className="text-white/20">|</span>
+            <Link
+              href="/briefing/archive"
+              className="text-sm text-[var(--color-primary)] hover:underline"
+            >
+              지난 브리핑 보기
+            </Link>
+          </div>
+        </StaggerItem>
+      </StaggerContainer>
+    </PageTransition>
   );
 }
 
@@ -421,7 +445,7 @@ export default async function BriefingPage({ searchParams }: Props) {
   }
 
   if (!reportSet || reportSet.reports.length === 0) {
-    return <EmptyState />;
+    return <PageTransition><EmptyState /></PageTransition>;
   }
 
   return <BriefingContent reportSet={reportSet} />;

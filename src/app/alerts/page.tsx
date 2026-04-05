@@ -4,6 +4,8 @@ import SeverityBadge from "@/components/briefing/SeverityBadge";
 import CategoryBadge from "@/components/briefing/CategoryBadge";
 import SentimentBadge from "@/components/briefing/SentimentBadge";
 import PaywallGate from "@/components/PaywallGate";
+import PageTransition from "@/components/PageTransition";
+import { StaggerContainer, StaggerItem } from "@/components/StaggerList";
 import type { Alert } from "@/lib/pipeline/alert-engine";
 import type { Severity } from "@/lib/pipeline/types";
 import type { Category } from "@/lib/pipeline/types";
@@ -65,61 +67,69 @@ export default async function AlertsPage() {
   const alerts = await getAlerts();
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h2 className="text-xl font-bold">알림</h2>
-        <p className="text-sm text-[var(--color-muted)] mt-1">
-          밤사이 중요 시장 이벤트 알림 · 매일 밤 10시~새벽 6시 자동 모니터링
-        </p>
-      </div>
-
-      {alerts.length === 0 ? (
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 text-center">
-          <div className="mb-3 text-3xl">🔔</div>
-          <p className="text-[var(--color-muted)] text-sm">
-            아직 알림이 없습니다.
-          </p>
-          <p className="text-[var(--color-muted)] text-xs mt-1">
-            매일 밤 시장 이벤트가 감지되면 여기에 알림이 표시됩니다.
+    <PageTransition>
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-xl font-bold">알림</h2>
+          <p className="text-sm text-[var(--color-muted)] mt-1">
+            밤사이 중요 시장 이벤트 알림 · 매일 밤 10시~새벽 6시 자동 모니터링
           </p>
         </div>
-      ) : (
-        <>
-          {/* Regular alerts — visible to all */}
-          {alerts.some((a) => a.severity !== "긴급") && (
-            <div className="space-y-3">
-              <h3 className="flex items-center gap-2 text-sm font-bold text-[var(--color-muted)]">
-                <span className="h-3 w-0.5 rounded-full bg-[var(--color-primary)]" />
-                일반 알림
-              </h3>
-              {alerts
-                .filter((a) => a.severity !== "긴급")
-                .map((alert) => (
-                  <AlertCard key={alert.id} alert={alert} />
-                ))}
-            </div>
-          )}
 
-          {/* Critical/urgent alerts — Pro only */}
-          {alerts.some((a) => a.severity === "긴급") && (
-            <div className="space-y-3">
-              <h3 className="flex items-center gap-2 text-sm font-bold text-[var(--color-muted)]">
-                <span className="h-3 w-0.5 rounded-full bg-red-400" />
-                긴급 알림
-              </h3>
-              <PaywallGate requiredTier="pro">
-                <div className="space-y-3">
+        {alerts.length === 0 ? (
+          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 text-center">
+            <div className="mb-3 text-3xl">🔔</div>
+            <p className="text-[var(--color-muted)] text-sm">
+              아직 알림이 없습니다.
+            </p>
+            <p className="text-[var(--color-muted)] text-xs mt-1">
+              매일 밤 시장 이벤트가 감지되면 여기에 알림이 표시됩니다.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Regular alerts — visible to all */}
+            {alerts.some((a) => a.severity !== "긴급") && (
+              <div className="space-y-3">
+                <h3 className="flex items-center gap-2 text-sm font-bold text-[var(--color-muted)]">
+                  <span className="h-3 w-0.5 rounded-full bg-[var(--color-primary)]" />
+                  일반 알림
+                </h3>
+                <StaggerContainer className="space-y-3">
                   {alerts
-                    .filter((a) => a.severity === "긴급")
+                    .filter((a) => a.severity !== "긴급")
                     .map((alert) => (
-                      <AlertCard key={alert.id} alert={alert} />
+                      <StaggerItem key={alert.id}>
+                        <AlertCard alert={alert} />
+                      </StaggerItem>
                     ))}
-                </div>
-              </PaywallGate>
-            </div>
-          )}
-        </>
-      )}
-    </div>
+                </StaggerContainer>
+              </div>
+            )}
+
+            {/* Critical/urgent alerts — Pro only */}
+            {alerts.some((a) => a.severity === "긴급") && (
+              <div className="space-y-3">
+                <h3 className="flex items-center gap-2 text-sm font-bold text-[var(--color-muted)]">
+                  <span className="h-3 w-0.5 rounded-full bg-red-400" />
+                  긴급 알림
+                </h3>
+                <PaywallGate requiredTier="pro">
+                  <StaggerContainer className="space-y-3">
+                    {alerts
+                      .filter((a) => a.severity === "긴급")
+                      .map((alert) => (
+                        <StaggerItem key={alert.id}>
+                          <AlertCard alert={alert} />
+                        </StaggerItem>
+                      ))}
+                  </StaggerContainer>
+                </PaywallGate>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </PageTransition>
   );
 }
