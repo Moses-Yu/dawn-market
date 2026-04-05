@@ -6,19 +6,36 @@ import { Star } from "lucide-react";
 import SentimentBadge from "@/components/briefing/SentimentBadge";
 import type { Sentiment } from "@/lib/pipeline/types";
 
-interface WatchlistStock {
+interface DataPoint {
+  label: string;
+  value: string;
+  change?: string;
+  sentiment?: Sentiment;
+}
+
+interface StockBriefing {
+  symbol: string;
   name: string;
-  price: string;
-  change: string;
-  changePercent: string;
-  direction: "up" | "down" | "sideways";
-  sentiment: Sentiment;
-  sectorPrediction: string;
+  sector: string;
+  sectorTitle: string;
+  dataPoints: DataPoint[];
+  prediction: {
+    direction: "up" | "down" | "sideways";
+    confidence: "high" | "medium" | "low";
+    summary: string;
+  };
 }
 
 interface PersonalizedData {
-  stocks: WatchlistStock[];
+  date: string;
+  stocks: StockBriefing[];
 }
+
+const directionToSentiment: Record<string, Sentiment> = {
+  up: "bullish",
+  down: "bearish",
+  sideways: "neutral",
+};
 
 export default function PersonalizedBriefing() {
   const [data, setData] = useState<PersonalizedData | null>(null);
@@ -87,18 +104,16 @@ export default function PersonalizedBriefing() {
       </h3>
       <div className="space-y-2">
         {data.stocks.map((stock, i) => {
+          const { direction } = stock.prediction;
+          const sentiment = directionToSentiment[direction] ?? "neutral";
           const changeColor =
-            stock.direction === "up"
+            direction === "up"
               ? "text-[var(--color-market-up)]"
-              : stock.direction === "down"
+              : direction === "down"
                 ? "text-[var(--color-market-down)]"
                 : "text-gray-400";
           const arrow =
-            stock.direction === "up"
-              ? "▲"
-              : stock.direction === "down"
-                ? "▼"
-                : "→";
+            direction === "up" ? "▲" : direction === "down" ? "▼" : "→";
 
           return (
             <div
@@ -108,20 +123,43 @@ export default function PersonalizedBriefing() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold">{stock.name}</span>
-                  <SentimentBadge sentiment={stock.sentiment} />
+                  <SentimentBadge sentiment={sentiment} />
                 </div>
-                <div className="text-right">
-                  <div className="text-sm tabular-nums">{stock.price}</div>
-                  <div
-                    className={`text-xs font-medium tabular-nums ${changeColor}`}
-                  >
-                    {arrow} {stock.change} ({stock.changePercent})
-                  </div>
-                </div>
+                <span className="text-xs text-[var(--color-muted)]">
+                  {stock.sectorTitle}
+                </span>
               </div>
-              {stock.sectorPrediction && (
+              {stock.dataPoints.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                  {stock.dataPoints.map((dp, j) => (
+                    <div key={j} className="flex items-baseline gap-1 text-xs">
+                      <span className="text-[var(--color-muted)]">
+                        {dp.label}
+                      </span>
+                      <span className="tabular-nums">{dp.value}</span>
+                      {dp.change && (
+                        <span
+                          className={`font-medium tabular-nums ${
+                            dp.sentiment === "bullish"
+                              ? "text-[var(--color-market-up)]"
+                              : dp.sentiment === "bearish"
+                                ? "text-[var(--color-market-down)]"
+                                : "text-gray-400"
+                          }`}
+                        >
+                          {dp.change}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {stock.prediction.summary && (
                 <p className="mt-1.5 text-xs text-[var(--color-muted)]">
-                  {stock.sectorPrediction}
+                  <span className={`font-medium ${changeColor}`}>
+                    {arrow}
+                  </span>{" "}
+                  {stock.prediction.summary}
                 </p>
               )}
             </div>
