@@ -42,7 +42,7 @@ export async function POST(request: Request) {
           customerKey: sub.toss_customer_key,
           amount: PRO_PRICE,
           orderId,
-          orderName: "새벽시장 Pro 월간 자동��신",
+          orderName: "새벽시장 Pro 월간 자동갱신",
         });
 
         await upsertSubscription(sub.user_id, {
