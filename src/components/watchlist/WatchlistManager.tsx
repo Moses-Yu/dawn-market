@@ -82,7 +82,7 @@ export default function WatchlistManager({
       await fetch("/api/watchlist", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ watchlist: items }),
+        body: JSON.stringify({ stocks: items }),
       });
     } catch {
       // silent fail — optimistic update stays
