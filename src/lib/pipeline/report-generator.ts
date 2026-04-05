@@ -175,7 +175,7 @@ export async function generateReport(
   date: string,
   data: CollectedData,
   previousReports: Report[],
-  model: string = "claude-sonnet-4-20250514"
+  model: string = "claude-sonnet-4-6"
 ): Promise<GenerationResult> {
   const prompt = buildPrompt(reportType, data, previousReports);
 
@@ -229,6 +229,11 @@ export async function generateAllReports(
     const reportType = CORE_REPORT_TYPES[i];
     const previousReports = reports.map((r) => r.report);
 
+    // Small delay between API calls to avoid rate limiting
+    if (i > 0) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+
     // Try up to 2 times per report
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
@@ -242,16 +247,19 @@ export async function generateAllReports(
         );
         reports.push(result);
         totalTokens += result.tokensUsed;
+        console.log(`Report ${reportType} generated (${result.tokensUsed} tokens)`);
         break;
       } catch (error) {
         const msg = error instanceof Error ? error.message : String(error);
+        const statusCode = (error as { status?: number })?.status;
         if (attempt === 1) {
           console.error(
-            `Report ${reportType} failed after 2 attempts: ${msg}`
+            `Report ${reportType} failed after 2 attempts (status: ${statusCode}): ${msg}`
           );
-          failures.push({ reportType, error: msg });
+          failures.push({ reportType, error: `${statusCode || "unknown"}: ${msg}` });
         } else {
-          console.warn(`Report ${reportType} attempt ${attempt + 1} failed, retrying: ${msg}`);
+          console.warn(`Report ${reportType} attempt ${attempt + 1} failed (status: ${statusCode}), retrying in 2s: ${msg}`);
+          await new Promise((resolve) => setTimeout(resolve, 2000));
         }
       }
     }
