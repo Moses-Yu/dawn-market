@@ -297,6 +297,7 @@ function BriefingContent({ reportSet }: { reportSet: ReportSet }) {
           <div className="mb-6">
             <p className="text-xs text-[var(--color-muted)]">
               {new Date(reportSet.date + "T00:00:00").toLocaleDateString("ko-KR", {
+                timeZone: "Asia/Seoul",
                 year: "numeric",
                 month: "long",
                 day: "numeric",
@@ -307,6 +308,7 @@ function BriefingContent({ reportSet }: { reportSet: ReportSet }) {
             <div className="mt-1 text-xs text-[var(--color-muted)]">
               생성:{" "}
               {new Date(reportSet.generatedAt).toLocaleTimeString("ko-KR", {
+                timeZone: "Asia/Seoul",
                 hour: "2-digit",
                 minute: "2-digit",
               })}

@@ -47,7 +47,7 @@ export default async function SubscriptionPage() {
               <div className="text-sm text-[var(--color-muted)]">다음 결제일</div>
               <div className="text-sm font-medium">
                 {new Date(subscription.current_period_end).toLocaleDateString(
-                  "ko-KR"
+                  "ko-KR", { timeZone: "Asia/Seoul" }
                 )}
               </div>
             </div>
@@ -57,7 +57,7 @@ export default async function SubscriptionPage() {
         {subscription?.status === "cancelled" && (
           <div className="mt-3 rounded-lg bg-yellow-500/10 px-3 py-2 text-sm text-yellow-500">
             해지 예약됨 — {subscription.current_period_end
-              ? new Date(subscription.current_period_end).toLocaleDateString("ko-KR")
+              ? new Date(subscription.current_period_end).toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul" })
               : ""}까지 이용 가능
           </div>
         )}

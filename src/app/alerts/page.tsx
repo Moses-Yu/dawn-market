@@ -28,12 +28,10 @@ async function getAlerts(): Promise<Alert[]> {
 
 function formatTime(dateStr: string): string {
   const d = new Date(dateStr);
-  const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
-  const month = kst.getUTCMonth() + 1;
-  const day = kst.getUTCDate();
-  const hours = kst.getUTCHours().toString().padStart(2, "0");
-  const minutes = kst.getUTCMinutes().toString().padStart(2, "0");
-  return `${month}/${day} ${hours}:${minutes}`;
+  const month = d.toLocaleString("ko-KR", { timeZone: "Asia/Seoul", month: "numeric" }).replace("월", "");
+  const day = d.toLocaleString("ko-KR", { timeZone: "Asia/Seoul", day: "numeric" }).replace("일", "");
+  const time = d.toLocaleTimeString("ko-KR", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit", hour12: false });
+  return `${month}/${day} ${time}`;
 }
 
 function AlertCard({ alert }: { alert: Alert }) {

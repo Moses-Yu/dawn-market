@@ -91,9 +91,7 @@ function StatusBadge({ ok }: { ok: boolean }) {
 
 function formatTime(isoString: string | null) {
   if (!isoString) return "없음";
-  const d = new Date(isoString);
-  const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
-  return kst.toLocaleString("ko-KR", { timeZone: "UTC" });
+  return new Date(isoString).toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
 }
 
 export default async function MonitoringPage() {

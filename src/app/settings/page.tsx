@@ -74,7 +74,7 @@ export default async function SettingsPage() {
           <div className="flex justify-between text-sm">
             <span className="text-[var(--color-muted)]">가입일</span>
             <span>
-              {new Date(user.created_at).toLocaleDateString("ko-KR")}
+              {new Date(user.created_at).toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul" })}
             </span>
           </div>
         </div>
