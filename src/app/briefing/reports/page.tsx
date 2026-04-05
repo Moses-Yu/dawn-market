@@ -216,7 +216,7 @@ function ReportCardContent({
 
       {/* Generated time */}
       <div className="text-right text-xs text-[var(--color-muted)]">
-        생성: {new Date(generatedAt).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
+        생성: {new Date(generatedAt).toLocaleTimeString("ko-KR", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit" })}
       </div>
     </div>
   );
@@ -379,9 +379,9 @@ export default async function ReportsPage({
           <div className="text-right text-xs text-[var(--color-muted)]">
             데이터 윈도우
             <br />
-            {new Date(reportSet.dataWindowStart).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
+            {new Date(reportSet.dataWindowStart).toLocaleTimeString("ko-KR", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit" })}
             {" ~ "}
-            {new Date(reportSet.dataWindowEnd).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
+            {new Date(reportSet.dataWindowEnd).toLocaleTimeString("ko-KR", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit" })}
           </div>
         </div>
       )}

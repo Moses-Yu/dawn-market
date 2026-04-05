@@ -426,7 +426,7 @@ export default async function AdminAnalyticsPage() {
                   </p>
                   <p className="text-[var(--color-muted)]">
                     {p.paid_at
-                      ? new Date(p.paid_at).toLocaleDateString("ko-KR")
+                      ? new Date(p.paid_at).toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul" })
                       : "—"}
                   </p>
                 </div>
@@ -561,7 +561,7 @@ export default async function AdminAnalyticsPage() {
                         </span>
                       )}
                       <span className="text-[var(--color-muted)]">
-                        {new Date(fb.created_at).toLocaleDateString("ko-KR")}
+                        {new Date(fb.created_at).toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul" })}
                       </span>
                     </div>
                     <p className="text-xs leading-relaxed">{fb.message}</p>
