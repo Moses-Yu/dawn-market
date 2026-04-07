@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 const PUBLIC_PATHS = ["/", "/auth/login", "/auth/signup", "/auth/callback", "/auth/reset-password"];
+const PUBLIC_PREFIXES = ["/share/"];
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -40,7 +41,8 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Redirect unauthenticated users to login (except public paths)
-  if (!user && !PUBLIC_PATHS.includes(pathname)) {
+  const isPublicPrefix = PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));
+  if (!user && !PUBLIC_PATHS.includes(pathname) && !isPublicPrefix) {
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
     return NextResponse.redirect(url);
