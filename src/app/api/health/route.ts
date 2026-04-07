@@ -24,7 +24,7 @@ export async function GET() {
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
-    const { error } = await supabase.from("reports").select("id").limit(1);
+    const { error } = await supabase.from("dawn_reports").select("id").limit(1);
     if (error) throw error;
     checks.database = { status: "ok", ms: Date.now() - dbStart };
   } catch (err) {
