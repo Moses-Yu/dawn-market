@@ -33,6 +33,24 @@ const CATEGORY_LABELS: Record<Category, string> = {
 
 export { DIFFICULTY_LABELS, CATEGORY_LABELS };
 
+/** Convert a Korean term name to a URL-safe slug */
+export function termToSlug(termKo: string): string {
+  return termKo
+    .replace(/\s*\(.*?\)\s*/g, "") // Strip parenthetical content e.g. "(KOSPI)"
+    .trim()
+    .replace(/\s+/g, "-")
+    .toLowerCase();
+}
+
+/** Find a term by its slug (computed from termKo) */
+export function findTermBySlug(
+  terms: GlossaryTerm[],
+  slug: string
+): GlossaryTerm | undefined {
+  const decoded = decodeURIComponent(slug);
+  return terms.find((t) => termToSlug(t.termKo) === decoded);
+}
+
 // Static seed data — will be replaced by Supabase query once migration 007 lands
 export const SEED_TERMS: GlossaryTerm[] = [
   // === 시장 (Market) — 초급 ===

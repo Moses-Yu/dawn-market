@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import type { GlossaryTerm, Difficulty } from "@/lib/glossary/terms";
+import { termToSlug } from "@/lib/glossary/terms";
 import type { Category } from "@/lib/pipeline/types";
-import { Search, X, BookOpen } from "lucide-react";
+import { Search, X, BookOpen, ArrowRight } from "lucide-react";
 import { trackClick } from "@/lib/analytics";
 
 const CATEGORY_COLORS: Record<Category, string> = {
@@ -285,6 +287,15 @@ function TermCard({
               </div>
             </div>
           )}
+
+          {/* Detail page link */}
+          <Link
+            href={`/glossary/${encodeURIComponent(termToSlug(term.termKo))}`}
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-1 text-xs text-[var(--color-primary)] hover:underline"
+          >
+            자세히 보기 <ArrowRight className="h-3 w-3" />
+          </Link>
         </div>
       )}
     </button>
