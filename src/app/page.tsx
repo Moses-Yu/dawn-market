@@ -10,6 +10,10 @@ import HomeCTA from "@/components/home/HomeCTA";
 import UrgentAlertBanner from "@/components/home/UrgentAlertBanner";
 import WatchlistSummaryWidget from "@/components/home/WatchlistSummaryWidget";
 import WelcomeBanner from "@/components/home/WelcomeBanner";
+import LandingHero from "@/components/home/LandingHero";
+import LandingSocialProof from "@/components/home/LandingSocialProof";
+import LandingFeatures from "@/components/home/LandingFeatures";
+import LandingPricingTeaser from "@/components/home/LandingPricingTeaser";
 import type { Alert } from "@/lib/pipeline/alert-engine";
 
 function formatDate(dateStr: string): string {
@@ -168,8 +172,13 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteJsonLd) }}
       />
-      {/* 0. Welcome banner for non-logged-in users */}
-      <WelcomeBanner isLoggedIn={isLoggedIn} />
+      {/* 0. Landing hero for non-logged-in users, welcome banner for logged-in */}
+      {!isLoggedIn ? (
+        <LandingHero
+          briefingHeadline={dawnBriefing?.content.headline}
+          briefingDate={reportSet ? formatDate(reportSet.date) : undefined}
+        />
+      ) : null}
 
       {/* 1. Date header + generation time */}
       <section>
@@ -331,6 +340,15 @@ export default async function Home() {
 
       {/* 7. Single CTA — push or upgrade, never both */}
       <HomeCTA isPro={isPro} />
+
+      {/* 8. Landing-only sections for non-logged-in users */}
+      {!isLoggedIn && (
+        <>
+          <LandingSocialProof />
+          <LandingFeatures />
+          <LandingPricingTeaser />
+        </>
+      )}
     </div>
   );
 }
