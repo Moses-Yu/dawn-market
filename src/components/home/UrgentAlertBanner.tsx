@@ -66,7 +66,7 @@ export default function UrgentAlertBanner({ alerts }: { alerts: Alert[] }) {
       </Link>
       <button
         onClick={handleDismiss}
-        className="shrink-0 text-[var(--color-muted)] hover:text-[var(--color-secondary)] mt-0.5"
+        className="shrink-0 text-[var(--color-muted)] hover:text-[var(--color-foreground)] mt-0.5"
         aria-label="알림 닫기"
       >
         <X className="h-4 w-4" />

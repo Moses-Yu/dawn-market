@@ -15,14 +15,24 @@
   --bottom-nav-height: 4rem;
 }
 
+/* System mode: apply light when OS prefers light (unless dark is forced) */
 @media (prefers-color-scheme: light) {
-  :root {
+  :root:not([data-theme="dark"]) {
     --color-background: #ffffff;
     --color-foreground: #171717;
     --color-surface: rgba(0, 0, 0, 0.03);
     --color-surface-hover: rgba(0, 0, 0, 0.06);
     --color-border: rgba(0, 0, 0, 0.1);
   }
+}
+
+/* Manual light mode */
+:root[data-theme="light"] {
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+  --color-surface: rgba(0, 0, 0, 0.03);
+  --color-surface-hover: rgba(0, 0, 0, 0.06);
+  --color-border: rgba(0, 0, 0, 0.1);
 }
 
 body {

@@ -189,7 +189,7 @@ function SectorCard({
           {keyTakeaways.slice(0, 2).map((t, i) => (
             <p
               key={i}
-              className="text-xs text-[var(--color-secondary)] leading-relaxed"
+              className="text-xs text-[var(--color-muted)] leading-relaxed"
             >
               • {t}
             </p>

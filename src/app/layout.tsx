@@ -6,6 +6,7 @@ import ClientErrorReporter from "@/components/ClientErrorReporter";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import LazyFeedbackWidget from "@/components/LazyFeedbackWidget";
 import AnimatedLayout from "@/components/AnimatedLayout";
+import ThemeProvider from "@/components/ThemeProvider";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 
@@ -62,23 +63,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <head>
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("dawn-theme");if(t&&t!=="system")document.documentElement.setAttribute("data-theme",t)}catch(e){}})()`,
+          }}
+        />
       </head>
       <body className="antialiased">
-        <ClientErrorReporter />
-        <AnalyticsProvider />
-        <ErrorBoundary>
-          <div className="mx-auto flex min-h-dvh max-w-lg flex-col">
-            <Header />
-            <main className="flex-1 px-4 py-4 pb-20">
-              <AnimatedLayout>{children}</AnimatedLayout>
-            </main>
-            <BottomNav />
-          </div>
-          <LazyFeedbackWidget />
-        </ErrorBoundary>
+        <ThemeProvider>
+          <ClientErrorReporter />
+          <AnalyticsProvider />
+          <ErrorBoundary>
+            <div className="mx-auto flex min-h-dvh max-w-lg flex-col">
+              <Header />
+              <main className="flex-1 px-4 py-4 pb-20">
+                <AnimatedLayout>{children}</AnimatedLayout>
+              </main>
+              <BottomNav />
+            </div>
+            <LazyFeedbackWidget />
+          </ErrorBoundary>
+        </ThemeProvider>
       </body>
     </html>
   );

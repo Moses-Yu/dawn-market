@@ -3,6 +3,7 @@ import { logout } from "@/app/actions/auth";
 import { getSectorPreferences, getWatchlist } from "@/app/actions/preferences";
 import PushToggle from "@/components/push/PushToggle";
 import SectorPreferences from "@/components/settings/SectorPreferences";
+import ThemeToggle from "@/components/settings/ThemeToggle";
 import WatchlistManager from "@/components/watchlist/WatchlistManager";
 
 export const metadata = {
@@ -52,6 +53,14 @@ export default async function SettingsPage() {
           브리핑에서 맞춤 분석을 받을 종목을 선택하세요 (최대 20개)
         </p>
         <WatchlistManager initialWatchlist={watchlist} />
+      </div>
+
+      {/* Theme */}
+      <div className="space-y-2">
+        <h3 className="text-sm font-semibold text-[var(--color-muted)]">
+          화면 모드
+        </h3>
+        <ThemeToggle />
       </div>
 
       {/* Push notifications */}
