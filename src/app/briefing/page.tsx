@@ -448,6 +448,13 @@ function BriefingContent({ reportSet }: { reportSet: ReportSet }) {
             >
               지난 브리핑 보기
             </Link>
+            <span className="text-white/20">|</span>
+            <Link
+              href="/glossary"
+              className="text-sm text-[var(--color-primary)] hover:underline"
+            >
+              용어 사전
+            </Link>
           </div>
         </StaggerItem>
       </StaggerContainer>
