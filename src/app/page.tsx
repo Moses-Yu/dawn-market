@@ -9,7 +9,6 @@ import type { ReportType, MarketPrediction, DataPoint } from "@/lib/pipeline/rep
 import HomeCTA from "@/components/home/HomeCTA";
 import UrgentAlertBanner from "@/components/home/UrgentAlertBanner";
 import WatchlistSummaryWidget from "@/components/home/WatchlistSummaryWidget";
-import WelcomeBanner from "@/components/home/WelcomeBanner";
 import LandingHero from "@/components/home/LandingHero";
 import LandingSocialProof from "@/components/home/LandingSocialProof";
 import LandingFeatures from "@/components/home/LandingFeatures";
