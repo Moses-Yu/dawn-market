@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { updateSectorPreferences } from "@/app/actions/preferences";
 
-const SECTORS = [
+export const SECTORS = [
   {
     id: "semiconductor",
     label: "반도체",
