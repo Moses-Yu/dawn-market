@@ -83,6 +83,53 @@ export async function loginWithMagicLink(
   return { success: "로그인 링크가 이메일로 전송되었습니다." };
 }
 
+export async function resetPassword(prevState: unknown, formData: FormData) {
+  const supabase = await createClient();
+
+  const email = formData.get("email") as string;
+
+  if (!email) {
+    return { error: "이메일을 입력해주세요." };
+  }
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/auth/callback?next=/update-password`,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: "비밀번호 재설정 링크가 이메일로 전송되었습니다." };
+}
+
+export async function updatePassword(prevState: unknown, formData: FormData) {
+  const supabase = await createClient();
+
+  const password = formData.get("password") as string;
+  const confirmPassword = formData.get("confirmPassword") as string;
+
+  if (!password || !confirmPassword) {
+    return { error: "비밀번호를 입력해주세요." };
+  }
+
+  if (password.length < 6) {
+    return { error: "비밀번호는 6자 이상이어야 합니다." };
+  }
+
+  if (password !== confirmPassword) {
+    return { error: "비밀번호가 일치하지 않습니다." };
+  }
+
+  const { error } = await supabase.auth.updateUser({ password });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  redirect("/briefing");
+}
+
 export async function logout() {
   const supabase = await createClient();
   await supabase.auth.signOut();
