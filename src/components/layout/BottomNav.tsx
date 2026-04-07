@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, FileText, BarChart3, Bell, BookOpen } from "lucide-react";
+import { Home, FileText, BarChart3, Bell, Settings } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
 const navItems = [
@@ -10,7 +10,7 @@ const navItems = [
   { href: "/briefing", label: "브리핑", icon: FileText },
   { href: "/sectors", label: "섹터", icon: BarChart3 },
   { href: "/alerts", label: "알림", icon: Bell },
-  { href: "/glossary", label: "용어사전", icon: BookOpen },
+  { href: "/settings", label: "설정", icon: Settings },
 ];
 
 const navSpring = { stiffness: 400, damping: 35 };
@@ -23,12 +23,12 @@ export default function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-[var(--color-background)]/90 backdrop-blur-md pb-safe">
       <div className="mx-auto flex h-16 max-w-lg items-center justify-around">
         {navItems.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`group relative flex flex-col items-center gap-0.5 px-3 py-1 text-xs transition-colors ${
+              className={`group relative flex h-full flex-1 flex-col items-center justify-center gap-0.5 px-1 text-xs transition-colors ${
                 isActive
                   ? "text-[var(--color-primary)]"
                   : "text-[var(--color-muted)] hover:text-[var(--color-foreground)]"

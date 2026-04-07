@@ -45,7 +45,7 @@ function AlertCard({ alert }: { alert: Alert }) {
           </span>
         )}
       </div>
-      <p className="text-sm text-[var(--color-secondary)] leading-relaxed">
+      <p className="text-sm text-[var(--color-muted)] leading-relaxed">
         {alert.body}
       </p>
       <div className="flex items-center gap-2 flex-wrap">
