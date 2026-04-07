@@ -6,6 +6,8 @@ import { getLatestReportSet } from "@/lib/pipeline/reports";
 import { getUserSubscription } from "@/lib/subscription";
 import type { ReportType, MarketPrediction, DataPoint } from "@/lib/pipeline/reports";
 import HomeCTA from "@/components/home/HomeCTA";
+import UrgentAlertBanner from "@/components/home/UrgentAlertBanner";
+import type { Alert } from "@/lib/pipeline/alert-engine";
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr + "T00:00:00");
@@ -73,6 +75,27 @@ function extractMarketIndices(dataPoints: DataPoint[]) {
   });
 }
 
+async function getUrgentAlerts(): Promise<Alert[]> {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  try {
+    const res = await fetch(`${baseUrl}/api/alerts?limit=30`, {
+      cache: "no-store",
+    });
+    if (!res.ok) return [];
+    const alerts: Alert[] = await res.json();
+    const eightHoursAgo = Date.now() - 8 * 60 * 60 * 1000;
+    return alerts.filter(
+      (a) =>
+        a.severity === "긴급" &&
+        a.createdAt &&
+        new Date(a.createdAt).getTime() > eightHoursAgo
+    );
+  } catch {
+    return [];
+  }
+}
+
 export default async function Home() {
   let reportSet;
   try {
@@ -82,6 +105,9 @@ export default async function Home() {
   }
 
   const { isPro } = await getUserSubscription();
+
+  // Fetch urgent alerts (last 8 hours, severity === "긴급")
+  const urgentAlerts = await getUrgentAlerts();
 
   // Extract dawn-briefing headline from report set
   const dawnBriefing = reportSet?.reports.find(
@@ -148,6 +174,9 @@ export default async function Home() {
             : "해외 시장 뉴스와 AI 인사이트를 매일 새벽에 전달합니다."}
         </p>
       </section>
+
+      {/* Urgent alert banner (conditional) */}
+      <UrgentAlertBanner alerts={urgentAlerts} />
 
       {reportSet ? (
         <>
