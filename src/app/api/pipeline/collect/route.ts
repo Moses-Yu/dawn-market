@@ -8,7 +8,7 @@ import {
 export async function POST(request: Request) {
   const authHeader = request.headers.get("authorization");
   const expectedKey = process.env.PIPELINE_API_KEY;
-  if (expectedKey && authHeader !== `Bearer ${expectedKey}`) {
+  if (!expectedKey || authHeader !== `Bearer ${expectedKey}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
