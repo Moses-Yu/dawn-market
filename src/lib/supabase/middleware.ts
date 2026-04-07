@@ -4,8 +4,8 @@ import { NextResponse, type NextRequest } from "next/server";
 /** Exact-match public paths */
 const PUBLIC_PATHS = ["/", "/auth/login", "/auth/signup", "/auth/callback", "/auth/reset-password"];
 
-/** Prefix-match public paths (SEO / user acquisition) */
-const PUBLIC_PATH_PREFIXES = ["/glossary", "/briefing", "/sectors"];
+/** Prefix-match public paths (SEO / user acquisition / share) */
+const PUBLIC_PATH_PREFIXES = ["/glossary", "/briefing", "/sectors", "/share"];
 
 function isPublicPath(pathname: string): boolean {
   if (PUBLIC_PATHS.includes(pathname)) return true;

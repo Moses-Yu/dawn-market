@@ -462,7 +462,11 @@ function BriefingContent({ reportSet }: { reportSet: ReportSet }) {
 
         {/* Share */}
         <StaggerItem>
-          <ShareButton date={reportSet.date} />
+          <ShareButton
+            date={reportSet.date}
+            title={`${formatDate(reportSet.date)} 새벽시장 브리핑`}
+            summary={headline}
+          />
         </StaggerItem>
 
         {/* Headline */}
