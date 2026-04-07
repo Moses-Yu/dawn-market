@@ -4,10 +4,12 @@ import Link from "next/link";
 import { Sparkles } from "lucide-react";
 import { getLatestReportSet } from "@/lib/pipeline/reports";
 import { getUserSubscription } from "@/lib/subscription";
+import { createClient } from "@/lib/supabase/server";
 import type { ReportType, MarketPrediction, DataPoint } from "@/lib/pipeline/reports";
 import HomeCTA from "@/components/home/HomeCTA";
 import UrgentAlertBanner from "@/components/home/UrgentAlertBanner";
 import WatchlistSummaryWidget from "@/components/home/WatchlistSummaryWidget";
+import WelcomeBanner from "@/components/home/WelcomeBanner";
 import type { Alert } from "@/lib/pipeline/alert-engine";
 
 function formatDate(dateStr: string): string {
@@ -107,6 +109,10 @@ export default async function Home() {
 
   const { isPro } = await getUserSubscription();
 
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const isLoggedIn = !!user;
+
   // Fetch urgent alerts (last 8 hours, severity === "긴급")
   const urgentAlerts = await getUrgentAlerts();
 
@@ -162,6 +168,9 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteJsonLd) }}
       />
+      {/* 0. Welcome banner for non-logged-in users */}
+      <WelcomeBanner isLoggedIn={isLoggedIn} />
+
       {/* 1. Date header + generation time */}
       <section>
         <h2 className="text-xl font-bold">
