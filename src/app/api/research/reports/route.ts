@@ -5,7 +5,7 @@ import type { Report } from "@/lib/pipeline/reports/types";
 function checkAuth(request: Request): boolean {
   const authHeader = request.headers.get("authorization");
   const expectedKey = process.env.PIPELINE_API_KEY;
-  return !expectedKey || authHeader === `Bearer ${expectedKey}`;
+  return !!expectedKey && authHeader === `Bearer ${expectedKey}`;
 }
 
 /**
