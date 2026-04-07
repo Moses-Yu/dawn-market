@@ -8,6 +8,7 @@ import PaywallGate from "@/components/PaywallGate";
 import PageTransition from "@/components/PageTransition";
 import { StaggerContainer, StaggerItem } from "@/components/StaggerList";
 import TrackEvent from "@/components/TrackEvent";
+import SignupCTA from "@/components/SignupCTA";
 
 const SECTOR_CONFIG: Record<
   string,
@@ -297,6 +298,7 @@ export default async function SectorDeepDivePage({ params }: { params: Promise<{
       </div>
 
       {report ? (
+        <>
         <PaywallGate
           requiredTier="pro"
           fallback={
@@ -404,6 +406,11 @@ export default async function SectorDeepDivePage({ params }: { params: Promise<{
             </Link>
           </div>
         </PaywallGate>
+        <SignupCTA
+          message="전체 섹터 분석과 AI 전망을 받아보세요"
+          buttonText="무료로 시작하기"
+        />
+        </>
       ) : (
         <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 text-center">
           <div className="text-3xl mb-3">📊</div>

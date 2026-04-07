@@ -13,11 +13,13 @@ import type {
   DataPoint,
   MarketPrediction,
 } from "@/lib/pipeline/reports";
+import { createClient } from "@/lib/supabase/server";
 import SentimentBadge from "@/components/briefing/SentimentBadge";
 import ShareButton from "@/components/briefing/ShareButton";
 import PaywallGate from "@/components/PaywallGate";
 import PersonalizedBriefing from "@/components/briefing/PersonalizedBriefing";
 import WatchlistUpsellBanner from "@/components/briefing/WatchlistUpsellBanner";
+import SignupCTA from "@/components/SignupCTA";
 import PageTransition from "@/components/PageTransition";
 import { StaggerContainer, StaggerItem } from "@/components/StaggerList";
 import { TrackReportView } from "@/components/TrackEvent";
@@ -283,6 +285,129 @@ function BriefingJsonLd({
   );
 }
 
+function BriefingTeaser({ reportSet }: { reportSet: ReportSet }) {
+  const dawnBriefing = reportSet.reports.find(
+    (r) => r.reportType === "dawn-briefing"
+  );
+  const primaryReport = dawnBriefing || reportSet.reports.find(
+    (r) => r.reportType === "us-market"
+  );
+  if (!primaryReport) return <EmptyState />;
+
+  const headline = primaryReport.content.headline;
+  const keyTakeaways = primaryReport.content.keyTakeaways;
+
+  return (
+    <PageTransition>
+      <StaggerContainer className="space-y-6">
+        <BriefingJsonLd reportSet={reportSet} headline={headline} />
+
+        {/* Header */}
+        <StaggerItem>
+          <div className="mb-6">
+            <p className="text-xs text-[var(--color-muted)]">
+              {new Date(reportSet.date + "T00:00:00").toLocaleDateString("ko-KR", {
+                timeZone: "Asia/Seoul",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                weekday: "long",
+              })}
+            </p>
+            <h1 className="mt-0.5 text-2xl font-bold">오늘의 시장 브리핑</h1>
+            <div className="mt-1 text-xs text-[var(--color-muted)]">
+              생성:{" "}
+              {new Date(reportSet.generatedAt).toLocaleTimeString("ko-KR", {
+                timeZone: "Asia/Seoul",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </div>
+          </div>
+        </StaggerItem>
+
+        {/* Share */}
+        <StaggerItem>
+          <ShareButton date={reportSet.date} />
+        </StaggerItem>
+
+        {/* Headline */}
+        <StaggerItem>
+          <section>
+            <p className="mb-4 text-sm font-medium leading-relaxed">
+              {headline}
+            </p>
+          </section>
+        </StaggerItem>
+
+        {/* Key Takeaways */}
+        {keyTakeaways.length > 0 && (
+          <StaggerItem>
+            <section>
+              <h3 className="flex items-center gap-2 mb-3 text-base font-semibold">
+                <span className="h-3.5 w-0.5 rounded-full bg-[var(--color-primary)]" />
+                오늘의 핵심 3줄
+              </h3>
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                <ul className="space-y-2">
+                  {keyTakeaways.slice(0, 3).map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-2 text-sm leading-relaxed"
+                    >
+                      <span className="mt-0.5 text-[var(--color-primary)]">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+          </StaggerItem>
+        )}
+
+        {/* Blurred teaser of remaining content */}
+        <StaggerItem>
+          <div className="relative">
+            <div className="pointer-events-none select-none blur-sm space-y-3">
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4 h-24" />
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4 h-32" />
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4 h-20" />
+            </div>
+          </div>
+        </StaggerItem>
+
+        {/* Signup CTA */}
+        <StaggerItem>
+          <SignupCTA
+            message="전체 브리핑과 상세 분석을 매일 받아보세요"
+            buttonText="무료로 시작하기"
+          />
+        </StaggerItem>
+
+        {/* Disclaimer */}
+        <StaggerItem>
+          <div className="rounded-lg border border-white/5 bg-white/[0.02] p-3 text-xs leading-relaxed text-[var(--color-muted)]">
+            본 브리핑은 AI가 자동 생성한 정보로, 투자 조언이 아닙니다. 투자
+            결정은 본인의 판단과 책임 하에 이루어져야 합니다.
+          </div>
+        </StaggerItem>
+
+        {/* Links */}
+        <StaggerItem>
+          <div className="flex items-center justify-center gap-4">
+            <Link
+              href="/briefing/archive"
+              className="text-sm text-[var(--color-primary)] hover:underline"
+            >
+              지난 브리핑 보기
+            </Link>
+          </div>
+        </StaggerItem>
+      </StaggerContainer>
+    </PageTransition>
+  );
+}
+
 function BriefingContent({ reportSet }: { reportSet: ReportSet }) {
   const dawnBriefing = reportSet.reports.find(
     (r) => r.reportType === "dawn-briefing"
@@ -469,6 +594,15 @@ export default async function BriefingPage({ searchParams }: Props) {
 
   if (!reportSet || reportSet.reports.length === 0) {
     return <PageTransition><EmptyState /></PageTransition>;
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return <BriefingTeaser reportSet={reportSet} />;
   }
 
   return <BriefingContent reportSet={reportSet} />;

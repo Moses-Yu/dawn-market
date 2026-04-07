@@ -1,7 +1,18 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+/** Exact-match public paths */
 const PUBLIC_PATHS = ["/", "/auth/login", "/auth/signup", "/auth/callback", "/auth/reset-password"];
+
+/** Prefix-match public paths (SEO / user acquisition) */
+const PUBLIC_PATH_PREFIXES = ["/glossary", "/briefing", "/sectors"];
+
+function isPublicPath(pathname: string): boolean {
+  if (PUBLIC_PATHS.includes(pathname)) return true;
+  return PUBLIC_PATH_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(prefix + "/")
+  );
+}
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -40,7 +51,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Redirect unauthenticated users to login (except public paths)
-  if (!user && !PUBLIC_PATHS.includes(pathname)) {
+  if (!user && !isPublicPath(pathname)) {
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
     return NextResponse.redirect(url);

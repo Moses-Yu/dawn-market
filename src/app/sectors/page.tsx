@@ -7,6 +7,7 @@ import PaywallGate from "@/components/PaywallGate";
 import PageTransition from "@/components/PageTransition";
 import { StaggerContainer, StaggerItem } from "@/components/StaggerList";
 import TrackEvent from "@/components/TrackEvent";
+import SignupCTA from "@/components/SignupCTA";
 
 
 const SECTOR_CONFIG: Record<
@@ -330,6 +331,11 @@ export default async function SectorsPage() {
           </p>
         </div>
       )}
+
+      <SignupCTA
+        message="6대 섹터 심층 분석과 AI 전망을 받아보세요"
+        buttonText="무료로 시작하기"
+      />
 
       {/* Link to full reports */}
       {reportSet && (

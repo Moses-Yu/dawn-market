@@ -8,6 +8,7 @@ import {
 import type { Category } from "@/lib/pipeline/types";
 import { createClient } from "@/lib/supabase/server";
 import PageTransition from "@/components/PageTransition";
+import SignupCTA from "@/components/SignupCTA";
 import GlossaryClient from "./GlossaryClient";
 
 export const metadata = {
@@ -59,6 +60,10 @@ export default async function GlossaryPage() {
           terms={terms}
           categoryLabels={CATEGORY_LABELS}
           difficultyLabels={DIFFICULTY_LABELS}
+        />
+        <SignupCTA
+          message="용어 사전과 함께 매일 AI 시장 브리핑도 받아보세요"
+          buttonText="무료로 시작하기"
         />
       </div>
     </PageTransition>

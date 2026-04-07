@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getReportSetDates } from "@/lib/pipeline/reports";
+import SignupCTA from "@/components/SignupCTA";
 
 
 export const metadata: Metadata = {
@@ -53,25 +54,31 @@ export default async function ArchivePage() {
           </p>
         </div>
       ) : (
-        <div className="space-y-2">
-          {dates.map((d) => (
-            <Link
-              key={d.date}
-              href={`/briefing?date=${d.date}`}
-              className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
-            >
-              <div>
-                <div className="text-sm font-semibold">
-                  {formatDate(d.date)}
+        <>
+          <div className="space-y-2">
+            {dates.map((d) => (
+              <Link
+                key={d.date}
+                href={`/briefing?date=${d.date}`}
+                className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
+              >
+                <div>
+                  <div className="text-sm font-semibold">
+                    {formatDate(d.date)}
+                  </div>
+                  <div className="mt-0.5 text-xs text-[var(--color-muted)]">
+                    리포트 {d.reportCount}건
+                  </div>
                 </div>
-                <div className="mt-0.5 text-xs text-[var(--color-muted)]">
-                  리포트 {d.reportCount}건
-                </div>
-              </div>
-              <span className="text-[var(--color-muted)]">→</span>
-            </Link>
-          ))}
-        </div>
+                <span className="text-[var(--color-muted)]">→</span>
+              </Link>
+            ))}
+          </div>
+          <SignupCTA
+            message="매일 AI가 분석한 시장 브리핑을 받아보세요"
+            buttonText="무료로 시작하기"
+          />
+        </>
       )}
     </div>
   );
