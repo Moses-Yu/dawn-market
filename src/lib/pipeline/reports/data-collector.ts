@@ -154,7 +154,7 @@ export interface CollectedData {
 }
 
 /**
- * Collect all data needed for the 7 reports.
+ * Collect all data needed for the 12 reports.
  * Fetches from all RSS feeds and all Yahoo Finance symbols.
  */
 export async function collectAllData(): Promise<CollectedData> {
