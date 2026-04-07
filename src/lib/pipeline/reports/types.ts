@@ -82,6 +82,7 @@ export interface MarketPrediction {
   confidence: "high" | "medium" | "low";
   summary: string;
   factors: string[];
+  invalidationConditions?: string[];
 }
 
 export interface ReportSet {

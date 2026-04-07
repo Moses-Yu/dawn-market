@@ -199,6 +199,25 @@ function PredictionCard({ prediction }: { prediction: MarketPrediction }) {
           ))}
         </ul>
       )}
+      {prediction.invalidationConditions &&
+        prediction.invalidationConditions.length > 0 && (
+          <div className="mt-3 rounded-lg border border-yellow-500/20 bg-yellow-500/5 p-3">
+            <div className="mb-1.5 text-xs font-semibold text-yellow-400/90">
+              무효화 조건
+            </div>
+            <ul className="space-y-1">
+              {prediction.invalidationConditions.map((cond, i) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-2 text-xs text-[var(--color-muted)]"
+                >
+                  <span className="mt-0.5 text-yellow-400/70">⚠</span>
+                  <span>{cond}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
     </div>
   );
 }
