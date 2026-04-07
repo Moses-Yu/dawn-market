@@ -45,6 +45,10 @@ body {
   overflow-wrap: break-word;
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 @supports (padding: env(safe-area-inset-bottom)) {
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);

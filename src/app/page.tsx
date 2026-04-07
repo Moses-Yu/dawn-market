@@ -7,6 +7,7 @@ import { getUserSubscription } from "@/lib/subscription";
 import type { ReportType, MarketPrediction, DataPoint } from "@/lib/pipeline/reports";
 import HomeCTA from "@/components/home/HomeCTA";
 import UrgentAlertBanner from "@/components/home/UrgentAlertBanner";
+import WatchlistSummaryWidget from "@/components/home/WatchlistSummaryWidget";
 import type { Alert } from "@/lib/pipeline/alert-engine";
 
 function formatDate(dateStr: string): string {
@@ -316,7 +317,10 @@ export default async function Home() {
         </section>
       )}
 
-      {/* 6. Single CTA — push or upgrade, never both */}
+      {/* 6. Watchlist summary widget */}
+      <WatchlistSummaryWidget />
+
+      {/* 7. Single CTA — push or upgrade, never both */}
       <HomeCTA isPro={isPro} />
     </div>
   );
